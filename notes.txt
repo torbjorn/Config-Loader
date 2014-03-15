@@ -43,3 +43,4 @@ Chat with mst:
 22:50 <mst> I just figured the best way to find out what was actually needed at this point was to try doing shit
 22:51 <mst> also, if you produce a hack that passes ZOMG's tests, we can always de-hack it afterwards
 22:51 <torbjorn> ok. the structure/architecture of C::L seems pretty good, from what i gather from the git log (i looked at all diff's for all commits!) there seems to have been a sensible refactoring along the way too
+22:54 <mst> yeah, well, https://metacpan.org/author/SYMKAT # she's no slouch even without me collaborating
