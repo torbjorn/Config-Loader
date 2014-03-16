@@ -10,7 +10,7 @@ has sources => (
 );
 has overrides => (is => 'ro', default => sub { {} });
 has default => (is => 'ro', default => sub { {} });
-has loader => (is => 'lazy', handles => [ 'load_config' ] );
+has loader => (is => 'lazy', handles => [ 'load_config' ]);
 
 sub BUILD {
     my ($self, $args) = @_;
