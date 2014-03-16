@@ -17,6 +17,7 @@ has load_type => (is => 'lazy', builder => sub {
 
 sub load_config {
   my ($self) = @_;
+  print "# FILE: LOADING ", $self->file, "\n";
   my $config = (values %{$self->_load_config_any->[0]||{}})[0];
   return $config || {};
 }

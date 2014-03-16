@@ -3,6 +3,7 @@ package Config::Loader::Source::Profile::Default;
 use Config::Loader ();
 use Module::Runtime qw(use_module);
 use Moo;
+use MooX::Aliases;
 
 has process_template   => (is => 'ro', default => sub { 1 } );
 has sources => (
@@ -10,7 +11,13 @@ has sources => (
 );
 has overrides => (is => 'ro', default => sub { {} });
 has default => (is => 'ro', default => sub { {} });
-has loader => (is => 'lazy', handles => [ 'load_config' ]);
+has loader => (is => 'lazy', handles => [ 'load_config' ] );
+
+## ::ZOMG compability
+sub load {
+    my $self = shift;
+    return $self->load_config;
+}
 
 sub BUILD {
     my ($self, $args) = @_;
