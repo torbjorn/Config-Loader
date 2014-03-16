@@ -1,9 +1,9 @@
 package Config::Loader::Shoehorn::ZOMG;
 
+## Config::ZOMG compability module
+
 use strict;
 use warnings;
-
-## ::ZOMG compability code
 
 use File::Spec::Functions;
 use File::Basename qw(fileparse);
@@ -110,7 +110,8 @@ sub find {
 }
 
 
-## Zhoehorn internals
+## Shoehorn internals
+
 sub _make_object {
     my $self = shift;
     $self->{config} = undef;
@@ -281,5 +282,12 @@ sub _path_to {}
     }
 
 }
+
+## should perhaps check if ::Default is loaded before this
+sub Config::Loader::Source::Profile::Default::load {
+    my $self = shift;
+    return $self->load_config;
+}
+
 
 1;
