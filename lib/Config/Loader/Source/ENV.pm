@@ -12,8 +12,6 @@ sub load_config {
 
     my $ds = {};
 
-    print "# ENV: LOADING\n";
-
     for my $key ( @{$self->env_search} ) {
         my $search =
             ( $self->env_prefix
