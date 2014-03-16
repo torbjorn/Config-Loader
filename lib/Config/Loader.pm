@@ -54,7 +54,7 @@ sub _process_args {
 
     ## Need an object that:
     ## 1) loads config on ->load
-    ## 2) fetches config like ->load->{'some-conf-key'}
+    ## 2) fetches config on load, like ->load->{'some-conf-key'}
     ## 3) Can the P::Default be shoehorned to do this?
     my %args = @{$_[0]};
 
@@ -67,38 +67,48 @@ sub _process_args {
 
         ## One or more config files. Delete the path key in the
         ## process as ::Default don't use them
-        if ( defined ( my $dir = delete $args{path} ) ) {
+
+        my @files;
+
+        ## Filenames come in env variables
+        if ( defined (my $env_filepath =
+                          $ENV{ uc $zomg_name . "_CONFIG" } )) {
+
+            push @files, $env_filepath;
+
+        }
+        ##.. or are found locally
+        elsif ( defined ( my $dir = delete $args{path} ) ) {
 
             ## Extra verbose variable names at this point
             my $fname = $zomg_name;
 
             my $filepath = catfile( $dir, $fname );
 
+            push @files, $filepath;
+
+        }
+
+        ## Add them as sources
+        for my $file (@files) {
+
             push @{$args{sources}},
-                [ 'File', { file => $filepath } ];
+                [ 'File', { file => $file } ];
 
             ## also push a _local sibling, ::File does the right thing if
             ## it doesn't exist.
-            if ( not $fname =~ /_local/ ) {
+            if ( not $file =~ /_local/ ) {
 
-                my($new_fname,$dirs,$ext) = fileparse $fname, qr/\.[^.]*/;
+                my($new_fname,$dirs,$ext) = fileparse $file, qr/\.[^.]*/;
 
                 ## in time the "local" part will be dynamic
                 $new_fname .= "_" . "local" . $ext;;
 
                 push @{$args{sources}},
-                    [ 'File', { file => catfile($dir,$new_fname) } ];
+                    [ 'File', { file => catfile($dirs,$new_fname) } ];
 
             }
 
-            ## Files also come as env variables
-            if ( defined (my $env_filepath =
-                     $ENV{ uc $zomg_name . "_CONFIG" } )) {
-
-                push @{$args{sources}},
-                    [ 'File', { file => $env_filepath } ];
-
-            }
 
         }
 
