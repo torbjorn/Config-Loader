@@ -71,3 +71,4 @@ Day changed to 16 Mar 2014
 19:35 <mst> that's what originally reminded me I'd need filters
 19:36 <torbjorn> hm yes
 19:39 <torbjorn> ill get back to it and see if i can mess it up again
+19:39 <mst> awesome.
