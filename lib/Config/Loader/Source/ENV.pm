@@ -13,11 +13,11 @@ sub load_config {
     my $ds = {};
 
     for my $key ( @{$self->env_search} ) {
-        my $search = 
-            ( $self->env_prefix 
+        my $search =
+            ( $self->env_prefix
                 ? $self->env_prefix . "_"
                 : ""
-            ) 
+            )
             .
             uc( $key )
             .

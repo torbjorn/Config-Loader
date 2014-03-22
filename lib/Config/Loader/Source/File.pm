@@ -1,12 +1,16 @@
 package Config::Loader::Source::File;
 
 use Config::Any;
+use Hash::Merge::Simple qw(merge);
 use File::Spec;
 use Moo;
+
 
 with 'Config::Loader::SourceRole::OneArgNew';
 
 sub one_arg_name { 'file' }
+
+has files_loaded => (is => 'rw', default => sub{ [] } );
 
 has file => (is => 'ro', required => 1);
 has load_args => (is => 'ro', default => sub { {} });
@@ -17,17 +21,19 @@ has load_type => (is => 'lazy', builder => sub {
 
 sub load_config {
   my ($self) = @_;
-  my $config = (values %{$self->_load_config_any->[0]||{}})[0];
-  return $config || {};
+  my $cfg = merge map { values %$_ } @{ $self->_load_config_any };
+  return $cfg || {};
 }
 
 sub _load_config_any {
   my ($self) = @_;
-  Config::Any->${\"load_${\$self->load_type}"}({
+  my $cfg = Config::Any->${\"load_${\$self->load_type}"}({
     $self->load_type => [ $self->file ],
     use_ext => (not exists $self->load_args->{force_plugins}),
     %{$self->load_args},
   });
+  $self->files_loaded([ map { keys %$_ } @$cfg ]);
+  return $cfg;
 }
 
 1;

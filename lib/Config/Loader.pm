@@ -14,7 +14,7 @@ sub import {
     $export ||= "get_config";
 
     my $target = caller() . "::" . $export;
-    
+
     no strict 'refs';
     *$target = sub {
         my @args = @_;
@@ -62,13 +62,13 @@ Other Documentation
 
 =over4
 
-=item * L<Config::Loader::Cookbook::Introduction> - Detailed information 
+=item * L<Config::Loader::Cookbook::Introduction> - Detailed information
 on how Config::Loader works.
 
-=item * L<Config::Loader::Cookbook::Sources> - How to make Config::Loader 
+=item * L<Config::Loader::Cookbook::Sources> - How to make Config::Loader
 work with your favorite method of loading configuration data.
 
-=back 
+=back
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,7 @@ work with your favorite method of loading configuration data.
         },
     });
 
-    printf("Configured %s on http://%s:%s/", 
+    printf("Configured %s on http://%s:%s/",
         $config->{name}, $config->{host}, $config->{port}
     );
 
@@ -134,11 +134,11 @@ L<Config::Any> recognizes.  If any of some_key, some_other_key or a_hash_ref are
 defined in the configuration file, they will overwrite the values in the default data
 structure.
 
-Any new keys given by GetOpts will be added to the data structure. 
+Any new keys given by GetOpts will be added to the data structure.
 
 =head3 GetOpts
 
-The next source looked at will be GetOpts.  By default, any top-level key that exists in 
+The next source looked at will be GetOpts.  By default, any top-level key that exists in
 the default data structure will be checked for its type (string, array, hash ref, boolean)
 and used for the configuration for a call to GetOptions.
 
@@ -160,16 +160,16 @@ it.
 This will mimic the structure that would have been created by the default data structure,
 but adds the string email as well.
 
-If any key which is already defined is returned by GetOptions it will overwrite the data 
+If any key which is already defined is returned by GetOptions it will overwrite the data
 structure as it is to this point.
 
-Any new keys given by GetOpts will be added to the data structure. 
+Any new keys given by GetOpts will be added to the data structure.
 
 =head3 ENV
 
 The next source looked at it ENV.  This source will check the default data structure and
 check for CONFIG_$key_name in the environment variables, is found it will replace it
-in the configuration.  
+in the configuration.
 
 
     my $config = get_config({
@@ -205,7 +205,7 @@ Kaitlyn Parkhurst (SymKat) I<E<lt>symkat@symkat.comE<gt>> ( Blog: L<http://symka
 
 =head1 COPYRIGHT
 
-Copyright (c) 2012 the Config::Loader L</AUTHOR>, L</CONTRIBUTORS>, and 
+Copyright (c) 2012 the Config::Loader L</AUTHOR>, L</CONTRIBUTORS>, and
 L</SPONSORS> as listed above.
 
 =head1 LICENSE
@@ -215,5 +215,3 @@ This library is free software and may be distributed under the same terms as per
 =head1 AVAILABILITY
 
 1;
-
-

@@ -11,21 +11,21 @@ has config           => ( is => 'lazy');
 
 sub load_config {
     my ( $self ) = @_;
-    
+
     return {} unless $self->config;
 
     my @copy = @ARGV;
-    
+
     GetOptionsFromArray( \@copy, \my %config, @{ $self->config } );
 
-    my %final = ( 
-        $self->getopts_hash_key 
+    my %final = (
+        $self->getopts_hash_key
             ? ( $self->getopts_hash_key => { %config } )
             : %config
     );
-    
-    if ( @copy and my $key = $self->getopts_argv_key ) { 
-        $final{$key} = \@copy; 
+
+    if ( @copy and my $key = $self->getopts_argv_key ) {
+        $final{$key} = \@copy;
     }
 
     return { %final };
@@ -36,7 +36,7 @@ sub _build_config {
 
     return $self->getopts_config if $self->getopts_config;
     return undef unless $self->default;
-    
+
     my @want;
 
     for my $key ( keys %{ $self->default } ) {
@@ -50,7 +50,7 @@ sub _build_config {
             push @want, "$key=s";
         }
     }
-    
+
     return [ @want ];
 }
 
@@ -62,11 +62,11 @@ sub _build_config {
 # mark is as a boolean --$key 5 will not work.
 #
 # TODO : Idea: Merge the data parsing and the default
-# together.  
+# together.
 #
-# get_config( 
-#     default => { foo => 1 }, 
-#     GetOptions( qw( "foo=s" ) ) 
+# get_config(
+#     default => { foo => 1 },
+#     GetOptions( qw( "foo=s" ) )
 # );
 
 sub _is_bool {
