@@ -5,9 +5,6 @@ use Test::More;
 use Test::Deep;
 use Config::Loader qw( File );
 
-use Data::Dumper;
-
-
 my $tests = [
     {
         name => "File Loads File",
