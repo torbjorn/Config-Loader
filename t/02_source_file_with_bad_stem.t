@@ -22,7 +22,6 @@ my $test = {
 
 {
     note( "No ENV variables set - should cause death" );
-
     # Functional
     throws_ok { get_config( %{ $test->{put} } ) }
         qr/found more than 1 file for stem/,
