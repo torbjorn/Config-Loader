@@ -52,10 +52,9 @@ my $test = {
     cmp_deeply(
         $o->files_loaded,
         bag( @{ $test->{files_loaded} } ),
-        'check files loaded',
+        'found files loaded',
     );
 };
-
 
 {
     note( "ENV set to allow" );
@@ -73,9 +72,8 @@ my $test = {
     cmp_deeply(
         $o->files_loaded,
         bag( @{ $test->{files_loaded} } ),
-        'check files loaded',
+        'found files loaded',
     );
 };
-
 
 done_testing;
