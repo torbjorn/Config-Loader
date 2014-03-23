@@ -10,7 +10,7 @@ use Data::Dumper;
 my $tests = [
     {
         title => "File Loads File",
-        put => { 
+        put => {
             sources => [ [ 'File', { file => "t/etc/config" } ] ],
         },
         get => {
@@ -36,14 +36,14 @@ my $tests = [
 
 for my $test ( @{ $tests } ) {
 
-    is_deeply( 
+    is_deeply(
         get_config( %{ $test->{put} }, getopts_argv_key => undef ),
         $test->{get},
         sprintf( "Line %d: %s", $test->{line}, $test->{title} ),
     );
-    
+
 #    # OO
-#    is_deeply( 
+#    is_deeply(
 #        Config::Loader->new_source( 'Layered', $test->{put} )->load_config,
 #        $test->{get},
 #        sprintf( "Line %d: %s", $test->{line}, $test->{title} ),

@@ -1,0 +1,91 @@
+22:31 <torbjorn> so ZOMG has its own ::Source::Loader that I hoped I could replace with C::L. However ZOMG::Source::Loader is a 220 line module where 1 line does the actual config loading, the 219 remaining lines deals with how to look up config files, with _local infix in filenames, finding config files from env variables, etc etc etc, quite messy (in my opinion). Now there is no way C::L can do all that stuff asis. So I was thinking perhaps stuffing it all in a Config::Loader::Source::Profile::ZOMG that extends ::Default and handles all that, btu then its more a major rewrite, not really Config::Loader to the rescue.
+22:31 <torbjorn> (had to do paid work a couple of days but have this night and tomorrow night, should have some progress by then)
+22:35 <torbjorn> Now I could try and clean up the ZOMG::Source::Loader and in the process fit it into the C::L framework. It would look nicer just from the cleanup and also use C::L. Also the Config::ZOMG itself would get a bit smaller, perhaps to the point where's there not much more to it than Moo types and C::L's get_config
+22:47 <torbjorn> ill do that and see what it looks like
+16:02 <mst> was at a conference, back now
+16:03 <mst> the _local thing and the env var thing are C::P::CL features so we'll need those
+16:04 <mst> _local seems like it should be a CL source, i.e. one that loads main+_local by instantiating two Config::Any sources then applies a merge source
+16:04 <mst> and then the env vars can be used to configure that
+16:05 <mst> Config::Loader->new_source('FileWithOverride', filename => 'myapp', override_suffix => '_local') maybe
+16:05 <mst> ... or, maybe, you can just supply two file sources and a merge source from above
+17:02 <torbjorn> thats what ive implemented now, ie file sources that are first sorted based on /_local/ , and then merged, using a Source::Merged to replace C::ZOMG::Source::Loader
+17:02 <torbjorn> i have taken most of it and hid away in Moo attributes with some use of coerce and builders, what remains is all related to env lookup and _local handling
+17:03 <torbjorn> ZOMG also has switches for env and _local, ie no_env and no_local but that should be managable
+17:04 <mst> check C::P::ConfigLoader before you keep going
+17:04 <mst> get a feel for which of the logic is common
+17:04 <mst> there's also Config::JFDI which does similar things
+17:04 <torbjorn> ill do that, should i push stuff somewhere?
+17:04 <torbjorn> i have a git account on the cat servers i think. pushed stuff for configloader there earlier
+17:05 <mst> maybe just lob stuff into your github for the moment?
+17:06 <mst> much though I'm not entirely a fan of it, I'm fairly sure I remember how to turn a pull request into a branch :)
+17:07 <torbjorn> yep
+17:08 <torbjorn> bit busy now. ill paste link when done
+17:16 <mst> no rush, I've got post-conference brain today
+17:16 <mst> so I suspect I'll be able to read code, but not write it so much
+17:17 <torbjorn> should I avoid using MooX::HandlesVia? Dont know what it does to performance
+17:19 <mst> (a) it should be fine (b) I find it unlikely config loading is ever going to show up in a profile in a meaningful way
+19:53 <torbjorn> https://github.com/torbjorn/Config-ZOMG/blob/torbjorn/lib/Config/ZOMG.pm
+19:53 <torbjorn> code below line 172: "## Functions for internal use", are largely imported from ZOMG's original own loader (which has now been replaced by a C::L::Source::Merged
+19:54 <torbjorn> those bits cover the _local handling and env lookups and need to be packed in C::L::Source::SomeWhere , ill get back to that when i have had a look at ConfigLoader
+19:55 <mst> that looks great so far
+19:58 <torbjorn> there is some creativity in the source's builder, and in how its cleared and rebuilt further down, and perhaps path_to's builder, apart from that im hoping to be able to reduce the "file" / "path" / "path_is_file" interaction to something simpler, but after looking at ConfigLoader
+19:58 <mst> yeah. not sure how much complexity in ZOMG is inherited from JFDI, which it forked from
+19:59 <mst> and how much is inherent to the basic C::P::CL style feature set
+23:29 <torbjorn> both ZOMG and ConfigLoader check the extension of a found config file and dies's if its not in Config::Any's list of known extensions. However Config::Any dies on its own if it is set to parse an unknown extension
+23:30 <torbjorn> given Config::Any doesnt die until it actually starts parsing, while ZOMG and ConfigLoader dies when they find files to parse , but perhaps that death would still suffice?
+23:33 <torbjorn> oh ill ask in #web-simple
+16:02 <mst> was at a conference, back now
+16:03 <mst> the _local thing and the env var thing are C::P::CL features so we'll need those
+16:04 <mst> _local seems like it should be a CL source, i.e. one that loads main+_local by instantiating two Config::Any sources then applies a merge source
+16:04 <mst> and then the env vars can be used to configure that
+16:05 <mst> Config::Loader->new_source('FileWithOverride', filename => 'myapp', override_suffix => '_local') maybe
+16:05 <mst> ... or, maybe, you can just supply two file sources and a merge source from above
+17:02 <torbjorn> thats what ive implemented now, ie file sources that are first sorted based on /_local/ , and then merged, using a Source::Merged to replace C::ZOMG::Source::Loader
+17:02 <torbjorn> i have taken most of it and hid away in Moo attributes with some use of coerce and builders, what remains is all related to env lookup and _local handling
+17:03 <torbjorn> ZOMG also has switches for env and _local, ie no_env and no_local but that should be managable
+17:04 <mst> check C::P::ConfigLoader before you keep going
+17:04 <mst> get a feel for which of the logic is common
+17:04 <mst> there's also Config::JFDI which does similar things
+17:04 <torbjorn> ill do that, should i push stuff somewhere?
+17:04 <torbjorn> i have a git account on the cat servers i think. pushed stuff for configloader there earlier
+17:05 <mst> maybe just lob stuff into your github for the moment?
+17:06 <mst> much though I'm not entirely a fan of it, I'm fairly sure I remember how to turn a pull request into a branch :)
+17:07 <torbjorn> yep
+17:08 <torbjorn> bit busy now. ill paste link when done
+17:16 <mst> no rush, I've got post-conference brain today
+17:16 <mst> so I suspect I'll be able to read code, but not write it so much
+17:17 <torbjorn> should I avoid using MooX::HandlesVia? Dont know what it does to performance
+17:19 <mst> (a) it should be fine (b) I find it unlikely config loading is ever going to show up in a profile in a meaningful way
+19:53 <torbjorn> https://github.com/torbjorn/Config-ZOMG/blob/torbjorn/lib/Config/ZOMG.pm
+19:53 <torbjorn> code below line 172: "## Functions for internal use", are largely imported from ZOMG's original own loader (which has now been replaced by a C::L::Source::Merged
+19:54 <torbjorn> those bits cover the _local handling and env lookups and need to be packed in C::L::Source::SomeWhere , ill get back to that when i have had a look at ConfigLoader
+19:55 <mst> that looks great so far
+19:58 <torbjorn> there is some creativity in the source's builder, and in how its cleared and rebuilt further down, and perhaps path_to's builder, apart from that im hoping to be able to reduce the "file" / "path" / "path_is_file" interaction to something simpler, but after looking at ConfigLoader
+19:58 <mst> yeah. not sure how much complexity in ZOMG is inherited from JFDI, which it forked from
+19:59 <mst> and how much is inherent to the basic C::P::CL style feature set
+23:29 <torbjorn> both ZOMG and ConfigLoader check the extension of a found config file and dies's if its not in Config::Any's list of known extensions. However Config::Any dies on its own if it is set to parse an unknown extension
+23:30 <torbjorn> given Config::Any doesnt die until it actually starts parsing, while ZOMG and ConfigLoader dies when they find files to parse , but perhaps that death would still suffice?
+23:33 <torbjorn> oh ill ask in #web-simple
+01:28 <torbjorn> Hm something else, Config::Any can take stems, and Config::Loader::Source::File handles that too, yet both ZOMG, JFDI and C::P::ConfigLoader go through the trouble of constructing every possible complete filename from a stem, before giving it to Config::Any
+01:29 <torbjorn> they could just have given it to Config::Any, and checked keys (and perhaps also values) of what it returns to see what files it found
+01:34 <torbjorn> Now its lucky for Config::Loader that it does this, because from ::Merged its not possible to tell which stem or file resulted in a loaded conf file since the filename from Config::Any is thrown away and the config values merged from other files.
+01:47 <torbjorn> and speaking of stems...
+01:49 <torbjorn> A stem with more than one possible completion, would give a { "stem1.pl" => {}, "stem1.conf" => {} } return, now File.pm is a strict "one file" => "one conf hash" object, and as such it assumes it safely can collect conf hash with (values %{...} )[0] , however with "one stem to many files" there will be more values in that hash
+01:50 <torbjorn> I originally had an idea to have a callback after Config::Any->load_stems that would update File.pm's file attribute. Which would allow for logging, ie just ask for the ->file  from a bunch of File objects
+01:51 <torbjorn> however you or symkat seems not to have though about this when designing the File source class
+01:53 <torbjorn> File::load_config can be changed to merge hashes in place, however that would throw away the file info for any app that would like to log which file was loaded
+01:54 <torbjorn> Now none of the 3 Config classes I'm looking at work with stems, they all take care to feed complete fillenames to Config::Any, so we're good so far
+01:54 <torbjorn> but C::L::Source::File supports stems, Config::Any seems to work nicely with stems, its a nice feature to have and support
+01:56 <torbjorn> A working solution is for File.pm to have a files_loaded attribute which gets populated with filenames-as-keys returned from Config::Any
+01:58 <torbjorn> File.pm could still return more than one config hash, at least ::Merged would handle that as it merges them nicely regardless how many it gets
+01:58 <torbjorn> however there seems to be a one-source-one-confighash design pattern in Config::Loader, not sure if we should break with that
+01:59 <torbjorn> File.pm can also merge the hashes, and could be modified to keep track of files loaded, but since ::Merged is already designed to merge config hashes it feels "righter" to let it do it.
+01:59 <torbjorn> ill be gone over the weekend, won't see any reply until sunday night
+02:07 <torbjorn> perhaps one stem with many files (ie same file with different extensions in same dir) is a really really bad practice , and its ok to have it silently blowup on the user
+02:39 <torbjorn> hm no for File.pm to function as a standalone Source, it needs to merge hashes
+02:39 <torbjorn> i set up an example here: https://github.com/torbjorn/Config-Loader/blob/torbjorn/lib/Config/Loader/Source/File.pm
+02:39 <torbjorn> and added a test entry to the array here: https://github.com/torbjorn/Config-Loader/blob/torbjorn/t/02_source_file.t
+02:40 <torbjorn> and two test files with same stem (stem1) here: https://github.com/torbjorn/Config-Loader/tree/torbjorn/t/etc
+02:40 <torbjorn> it adds config from both stem1 files (and tests for it)
+02:41 <torbjorn> attribute files_loaded is introduced for apps to be able to interrogate C::L for which files it loaded (ie for loging)
+02:41 <torbjorn> im going to sleep but will check in again late sunday

@@ -1,0 +1,50 @@
+02:44 <mst> yo?
+22:43 <torbjorn> pong
+22:45 <mst> fuck. I've completely forgotten what I was going to say.
+23:07 <torbjorn> np, issue with stems
+23:07 <torbjorn> i drowned you with text around beer o clock
+23:07 <torbjorn> stems gives many config hashes, while C::L Sources have a one-class-one-hash design pattern
+23:08 <torbjorn> needs an executive decition
+23:08 <torbjorn> oh and i cant spell complicated words
+23:08  * mst grins
+23:08 <mst> ok, will try and read it all tomorrow
+23:08 <torbjorn> no need its simple
+23:08 <torbjorn> if you give a File source a file-stem argument
+23:08 <torbjorn> that can potensially give many files
+23:09 <torbjorn> Config::Any takes care of that
+23:10 <torbjorn> ie stem1.pl, stem1.conf, etc... giving { "stem1.pl" => {}, "stem1.conf" => {} } while File was designed to give a one-key hash ref { "only_one_file.conf" => {} }
+23:11 <torbjorn> ok read it, but i just went around in the same circles it comes down to that. a file stem can give many files.
+23:11 <mst> I thought the available config loaders all basically assumed there'd only be one
+23:12 <torbjorn> they solve with unelegantly
+23:12 <torbjorn> by generating all possible stem / suffix combos
+23:12 <torbjorn> and filtering them on existance
+23:13 <torbjorn> that's Config::Any's job, Config::Loader::Source::File correctly delegates it to Config::Any, but cant cope with the outcome
+23:13 <mst> what I'm asking is: what happens in current ZOMG and CPCL when both myapp.pl and myapp.conf exist?
+23:14 <torbjorn> im 98% sure they merge
+23:14 <torbjorn> no im 100% sure
+23:14 <torbjorn> ZOMG would merge after sorting alphanumerically
+23:15 <torbjorn> i dont think any of them calls Config::Any->load_stems
+23:15 <mst> that's bizarre. I think I'd try throwing an exception if both exist and see what breaks
+23:15 <mst> because what the fuck
+23:16 <torbjorn> well its something Config::Any was designed to silently and wilfully and happily accept
+23:16 <mst> if the user creates both myapp.pl and myapp.conf then ideally a small gnome would climb out of the machine and hit the developer with a mallet
+23:17 <torbjorn> might need perl6 for that
+23:18 <mst> but I think basically we'll have to make the File source itself merge them, but with a warning, plus a flag to suppress the warning
+23:18 <mst> maybe also a flag to make it an exception instead, that defaults to on
+23:18 <mst> and that ZOMG explicitly passes for compatibility purposes
+23:18 <mst> that way "die screaming" will be the default for new CL users
+23:19 <mst> and CPCL and ZOMG users will get a warning (because it was probably a mistake) that they can turn off (because it might have been deliberate)
+23:19 <mst> it's more work, but it's the only executive decision I can see being reasonable in all the cases involved
+23:19 <mst> seem sane?
+23:19 <torbjorn> yes
+23:20 <mst> excellent. and now I need to vanish to meet somebody, back tomorrow
+23:20 <torbjorn> just 1 sec
+23:20 <mst> aye?
+23:20 <torbjorn> so default die, can be set to warn instead, or nowarn?
+23:20 <torbjorn> ZOMG and CPCL gets warn
+23:20 <mst> with an option to make them pass nowarn
+23:21 <torbjorn> yes ment that
+23:21 <torbjorn> see you tomorrow
+23:21 <mst> cheers :D
+Day changed to 23 Mar 2014
+19:12 <torbjorn> im back in town, ill get back to you when im done with the warning bits etc as discussed

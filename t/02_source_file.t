@@ -26,18 +26,6 @@ my $tests = [
         get => { },
         files_loaded => [],
     },
-    {
-        name => "A stem with two existing file completions",
-        line => __LINE__,
-        put => {
-            file => "t/etc/stem1",
-        },
-        get => {
-            foo => "bar",
-            baz => "test",
-        },
-        files_loaded => [qw(t/etc/stem1.pl t/etc/stem1.conf)]
-    }
 ];
 
 for my $test ( @{ $tests } ) {

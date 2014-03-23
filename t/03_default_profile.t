@@ -155,27 +155,27 @@ for my $test ( @$tests ) {
         sources => [ 'ENV', 'Getopts' ],
         getopts_hash_key => undef,
     );
-    
+
     # OO
-    is_deeply( 
-        Config::Loader->new_source( 
+    is_deeply(
+        Config::Loader->new_source(
             'Profile::Default',
             %args,
         )->load_config,
         $test->{get},
         sprintf( "Line %d/OO: %s", $test->{line}, $test->{title} ),
     );
-    
+
     # Change ARGV again ( destructive change )
 #    @ARGV = @{ $test->{argv} };
 
     # Functional
-    is_deeply( 
+    is_deeply(
         get_config(%args),
-        $test->{get}, 
+        $test->{get},
         sprintf( "Line %d/F: %s", $test->{line}, $test->{title} ),
     );
-    
+
 }
 
 done_testing;

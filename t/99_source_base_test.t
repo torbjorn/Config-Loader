@@ -8,13 +8,13 @@ use Config::Loader;
 my $tests = [
     {
         name => "",
-        put => { 
-            default => { 
-            
-            }, 
+        put => {
+            default => {
+
+            },
         },
         get => {
-        
+
         },
     },
 
