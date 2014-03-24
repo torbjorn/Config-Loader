@@ -17,9 +17,9 @@ sub BUILDARGS {
 
         my $args = shift;
 
+        ## modify the hash and setup sources from supplied 'files'
         $args->{sources} //= [];
 
-        ## add real sources from 'files' input
         push @{ $args->{sources} },
             map { [ File => { file => $_ } ] }
             @{delete $args->{files} or []}
