@@ -6,18 +6,21 @@ use Test::More;
 
 my $tests = [
     {
-        title => "Detailed sources",
+        title => "Many conf files",
         files => [qw(t/etc/config t/etc/stem1.conf t/etc/stem1.pl)],
-        # put => {
-        #         sources => [
-        #             [ 'File', { file => "t/etc/config" } ],
-        #             [ 'File', { file => "t/etc/stem1.conf" } ],
-        #             [ 'File', { file => "t/etc/stem1.pl" } ],
-        #         ],
-        # },
         get => {
             foo => "bar",
             baz => "test",
+            blee => "baz",
+            bar => [ "this", "that" ],
+        },
+        line    => __LINE__,
+    },
+    {
+        title => "One conf file",
+        files => [qw(t/etc/config)],
+        get => {
+            foo => "bar",
             blee => "baz",
             bar => [ "this", "that" ],
         },
@@ -42,54 +45,40 @@ for my $test (@$tests) {
     my @files = @{$test->{files}};
 
     my @variations = (
-        { args => [  files  => \@files ], title => "plain hash" },
-        { args => [ {files  => \@files} ], title => "hash ref" },
-        { args => [  source => [ map [ File => { file => $_ } ], @files ] ], title => "detailed sources" },
-        { args => [ {source => [ map [ File => { file => $_ } ], @files ] } ], title => "detailed sources hashref" },
+        { args => [  files   => \@files ], title => "plain hash" },
+        { args => [ {files   => \@files} ], title => "hash ref" },
+        { args => [  sources => [ map [ File => { file => $_ } ], @files ] ], title => "with sources" },
+        { args => [ {sources => [ map [ File => { file => $_ } ], @files ] } ], title => "with sources hashref" },
     );
 
-    my $expected_sources = $variations[3]->{args}[0]{source};
+    my $expected_sources = $variations[3]->{args}[0]{sources};
     my $expected_config = $test->{get};
 
-    for my $variation (@variations) {
+    subtest $test->{title}.' from line '.$test->{line} => sub {
 
-        my @args = @{$variation->{args}};
+        for my $variation (@variations) {
 
-        ## OO - try to fit this into the for loop above
-        my $o = Config::Loader->new_source("Files",@args);
+            my @args = @{$variation->{args}};
 
-        is_deeply(
-            $o->sources, $expected_sources,
-            $test->{title}.' from line '.$test->{line}.', '.$variation->{title}.', sources correct setup from input'
-        );
+            ## OO - try to fit this into the for loop above
+            my $o = Config::Loader->new_source("Files",@args);
 
-        is_deeply(
-            $o->load_config,
-            $expected_config,
-            $test->{title}.' from line '.$test->{line}.', '.$variation->{title}.', config loaded',
-        );
+            is_deeply(
+                $o->sources, $expected_sources,
+                $variation->{title}.': sources correct setup from input (OO)'
+            );
+
+            is_deeply(
+                $o->load_config,
+                $expected_config,
+                $variation->{title}.': config loaded (OO)',
+            );
+
+        }
 
     }
 
+
 }
-
-
-
-# my @files = qw[
-#                   t/etc/stem1.conf
-#                   t/etc/stem1.pl
-#               ];
-
-
-# ## OO - try to fit this into the for loop above
-# isa_ok( my $o = Config::Loader->new_source("Files",files => \@files), "Config::Loader::Source::Files" );
-# is_deeply( $o->sources, [ [File => {file=>"t/etc/stem1.conf"}], [File => {file=>"t/etc/stem1.pl"}] ],
-#        "sources correct setup from input" );
-
-# is_deeply(
-#     $o->load_config,
-#     { foo => "bar", baz => "test" },
-#     "files read"
-# );
 
 done_testing;
