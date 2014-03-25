@@ -3,6 +3,10 @@ package Config::Loader::Source::Files;
 use Moo;
 extends 'Config::Loader::Source::Merged';
 
+sub _keys_to_propagate {
+    return qw/load_args load_type/;
+}
+
 ## Transform the supplied files => [..] to a sources => [...] that is
 ## something that ::Merged would accept as sources
 ##
@@ -17,11 +21,19 @@ sub BUILDARGS {
 
         my $args = shift;
 
+        ## propagate certain arguments to the File objects
+        my %file_arg;
+        for (_keys_to_propagate) {
+            if ( exists $args->{$_} ) {
+                $file_arg{$_} = delete $args->{$_};
+            }
+        }
+
         ## modify the hash and setup sources from supplied 'files'
         $args->{sources} //= [];
 
         push @{ $args->{sources} },
-            map { [ File => { file => $_ } ] }
+            map { [ File => { %file_arg, file => $_ } ] }
             @{delete $args->{files} or []}
 
     };
