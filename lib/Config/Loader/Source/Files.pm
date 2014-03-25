@@ -56,4 +56,15 @@ sub BUILDARGS {
 
 };
 
+sub files_loaded {
+
+    my $self = shift;
+
+    return
+        map { @{$_->files_loaded} }
+        grep { $_->isa("Config::Loader::Source::File") }
+        @{ $self->source_objects };
+
+}
+
 1;
