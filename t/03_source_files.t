@@ -3,11 +3,13 @@ use warnings;
 use strict;
 use Config::Loader qw(Files);
 use Test::More;
+use Test::Deep;
 
 my $tests = [
     {
         title => "Many conf files",
         files => [qw(t/etc/config t/etc/stem1.conf t/etc/stem1.pl)],
+        true_file_names => [qw(t/etc/config.perl t/etc/stem1.conf t/etc/stem1.pl)],
         get => {
             foo => "bar",
             baz => "test",
@@ -19,6 +21,7 @@ my $tests = [
     {
         title => "One conf file",
         files => [qw(t/etc/config)],
+        true_file_names => [qw(t/etc/config.perl)],
         get => {
             foo => "bar",
             blee => "baz",
@@ -29,12 +32,14 @@ my $tests = [
     {
         title => "File without file returns {}",
         files => [ ],
+        true_file_names => [ ],
         get => { },
         line    => __LINE__,
     },
     {
         title => "File with invalid file returns {}",
         files => ["/invalid/path"],
+        true_file_names => [ ],
         get => { },
         line    => __LINE__,
     },
@@ -74,6 +79,14 @@ for my $test (@$tests) {
                 $variation->{title}.': config loaded (OO)',
             );
 
+            # note explain $o->source_objects->[1]->files_loaded;
+
+            cmp_deeply(
+                [$o->files_loaded],
+                bag( grep -e, @{$test->{true_file_names}} ),
+                "files loaded"
+            );
+last;
         }
 
     }
