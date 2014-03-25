@@ -21,6 +21,7 @@ sub load_config {
   my ($self) = @_;
   my $raw_cfg = $self->_load_config_any;
 
+  ## related to stems giving > 1 file
   if ( @$raw_cfg > 1 and not $ENV{CONFIG_LOADER_SOURCE_FILE_MANY_FILES_ALLOW} ) {
 
       if ( $ENV{CONFIG_LOADER_SOURCE_FILE_MANY_FILES_WARN_ONLY} ) {
