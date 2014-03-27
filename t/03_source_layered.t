@@ -21,6 +21,18 @@ my $tests = [
         line    => __LINE__,
     },
     {
+        title => "File is put in sources and loads File",
+        put => {
+            File => { file => "t/etc/config" },
+        },
+        get => {
+            foo => "bar",
+            blee => "baz",
+            bar => [ "this", "that" ],
+        },
+        line    => __LINE__,
+    },
+    {
         title => "File without file returns {}",
         put => { },
         get => { },
