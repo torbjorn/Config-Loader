@@ -10,24 +10,24 @@ my $tests = [
         title   => "Default",
         line    => __LINE__,
         argv    => [qw()],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             source => "Getopts",
         },
         get => {
-        
+
         },
     },
     {
         title   => "Remaining Keys",
         line    => __LINE__,
         argv    => [qw( foo bar )],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             source => "Getopts",
         },
         get => {
@@ -38,10 +38,10 @@ my $tests = [
         title   => "Renamed Remaining Keys",
         line    => __LINE__,
         argv    => [qw( foo bar )],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             getopts_argv_key    => "argv_left",
             source => "Getopts",
         },
@@ -53,25 +53,25 @@ my $tests = [
         title   => "Remaining Keys Disregarded",
         line    => __LINE__,
         argv    => [qw( foo bar )],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             getopts_argv_key    => undef,
             source => "Getopts",
         },
         get => {
-        
+
         },
     },
     {
         title   => "Spec Runs",
         line    => __LINE__,
         argv    => [qw( -i foo bar )],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             source => "Getopts",
             getopts_config => [ qw( i ) ]
         },
@@ -85,10 +85,10 @@ my $tests = [
         title   => "Runs Spec - Subkeyed Return",
         line    => __LINE__,
         argv    => [qw( -i foo bar )],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             source => "Getopts",
             getopts_hash_key    => "subkey",
             getopts_config      => [qw( i )],
@@ -102,10 +102,10 @@ my $tests = [
         title   => "Runs Spec - All Keyed",
         line    => __LINE__,
         argv    => [qw( -i foo bar)],
-        put     => { 
-            default => { 
-            
-            }, 
+        put     => {
+            default => {
+
+            },
             source => "Getopts",
             getopts_config => [qw( i )],
             getopts_hash_key    => "subkey",
@@ -120,10 +120,10 @@ my $tests = [
         title   => "Generated Specification - Hashes",
         line    => __LINE__,
         argv    => [qw( --foo a=1 --foo b=2 )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 foo     => {},
-            }, 
+            },
             source => "Getopts",
         },
         get => {
@@ -134,10 +134,10 @@ my $tests = [
         title   => "Generated Specification - Arrays",
         line    => __LINE__,
         argv    => [qw( --bar this --bar that )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 bar     => [],
-            }, 
+            },
             source => "Getopts",
         },
         get => {
@@ -148,11 +148,11 @@ my $tests = [
         title   => "Generated Specification - Numbers",
         line    => __LINE__,
         argv    => [qw( -n 5 )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 n       => 2,
 
-            }, 
+            },
             source => "Getopts",
         },
         get => {
@@ -163,11 +163,11 @@ my $tests = [
         title   => "Generated Specification - Bools",
         line    => __LINE__,
         argv    => [qw( -y --no-j )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 y       => 0,
                 j       => 1,
-            }, 
+            },
             source => "Getopts",
         },
         get => {
@@ -179,16 +179,16 @@ my $tests = [
         title   => "Generated Specification - Global",
         line    => __LINE__,
         argv    => [qw( --foo a=1 --foo b=2 -n 5 -y --no-j --bar this --bar that )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 foo     => {},
                 bar     => [],
                 n       => 2,
                 y       => 0,
                 j       => 1,
-                
 
-            }, 
+
+            },
             source => "Getopts",
         },
         get => {
@@ -203,16 +203,16 @@ my $tests = [
         title   => "Generated Specification - Global Remaining",
         line    => __LINE__,
         argv    => [qw( --foo a=1 --foo b=2 -n 5 -y --no-j --bar this --bar that this )],
-        put     => { 
-            default => { 
+        put     => {
+            default => {
                 foo     => {},
                 bar     => [],
                 n       => 2,
                 y       => 0,
                 j       => 1,
-                
 
-            }, 
+
+            },
             source => "Getopts",
         },
         get => {
@@ -228,21 +228,21 @@ my $tests = [
 ];
 
 for my $test ( @{ $tests } ) {
-    
+
     # ARGV Injection
     @ARGV = @{ $test->{argv} };
-    
+
     # Functional
     is_deeply(
-        get_config( $test->{put} ), 
-        $test->{get}, 
+        get_config( $test->{put} ),
+        $test->{get},
         sprintf( "Line %d/F: %s", $test->{line}, $test->{title})
     );
 
     # OO
     is_deeply(
-        Config::Loader->new_source( 'Getopts', $test->{put} )->load_config, 
-        $test->{get}, 
+        Config::Loader->new_source( 'Getopts', $test->{put} )->load_config,
+        $test->{get},
         sprintf( "Line %d/OO: %s", $test->{line}, $test->{title})
     );
 }
