@@ -48,18 +48,19 @@ my $tests = [
 
 for my $test ( @{ $tests } ) {
 
+    # Fn
     is_deeply(
         get_config( %{ $test->{put} }, getopts_argv_key => undef ),
         $test->{get},
-        sprintf( "Line %d: %s", $test->{line}, $test->{title} ),
+        sprintf( "Line %d: %s (Fn)", $test->{line}, $test->{title} ),
     );
 
-#    # OO
-#    is_deeply(
-#        Config::Loader->new_source( 'Layered', $test->{put} )->load_config,
-#        $test->{get},
-#        sprintf( "Line %d: %s", $test->{line}, $test->{title} ),
-#    );
+   # OO
+   is_deeply(
+       Config::Loader->new_source( 'Profile::Default', $test->{put} )->load_config,
+       $test->{get},
+       sprintf( "Line %d: %s (OO)", $test->{line}, $test->{title} ),
+   );
 }
 
 done_testing;
