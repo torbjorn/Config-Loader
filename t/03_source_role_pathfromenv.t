@@ -10,14 +10,12 @@ use Config::Loader;
     package Config::Loader::Source::RoleTest;
     use Moo;
 
-    extends "Config::Loader::Source::File";
+    extends "Config::Loader::Source::Profile::Default";
 
     has name => ( is => 'ro', required => 1 );
-    has path => ( is => 'ro' );
 
-    with "Config::Loader::SourceRole::PathFromEnv";
+    with "Config::Loader::SourceRole::FileFromEnv";
 
-    1;
 }
 
 {
@@ -26,19 +24,16 @@ use Config::Loader;
 
     my $o = Config::Loader->new_source(
         'RoleTest',
-        { name => "myapp", file => undef, load_type => "stems" }
+        { name => "myapp" }
     );
-    $o->{file} = ( $o->path );
-
-    is $o->path, "t/etc/config", "path read from \%ENV" ;
 
     my $cfg = $o->load_config;
 
     is_deeply $cfg,
         {
-            foo => "bar",
+            foo  => "bar",
             blee => "baz",
-            bar => [ "this", "that" ],
+            bar  => [ "this", "that" ],
         }, "config loaded";
 
 }
