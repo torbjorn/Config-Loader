@@ -66,16 +66,11 @@ has no_env => (
     default => 0
 );
 
-sub BUILDARGS {
-    my ($class, @args) = @_;
+around BUILDARGS => sub {
 
-    my $args;
-    if (  (ref($args[0])||'') eq 'HASH'  ) {
-        $args = $args[0];
-    }
-    else {
-        $args = {@args};
-    }
+    my($orig,$class) = (shift,shift);
+
+    my $args = $orig->($class,@_);
 
     if ( not $args->{no_env} ) {
 
