@@ -14,7 +14,6 @@ use_ok $_ for (
         Config::Loader::Source::File
         Config::Loader::Source::Getopts
         Config::Loader::Source::Merged
-        Config::Loader::Source::Files
         Config::Loader::Source::Profile::Default
     )
 );

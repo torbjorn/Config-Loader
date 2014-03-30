@@ -1,9 +1,19 @@
 #!/usr/bin/perl
+
 use warnings;
 use strict;
 use Config::Loader qw(Files);
 use Test::More;
 use Test::Deep;
+
+{
+    package Config::Loader::Source::FilesTest;
+
+    use Moo;
+    extends 'Config::Loader::Source::Profile::Default';
+    with 'Config::Loader::SourceRole::FileHelper';
+
+}
 
 my $tests = [
     {
@@ -66,7 +76,7 @@ for my $test (@$tests) {
             my @args = @{$variation->{args}};
 
             ## OO - try to fit this into the for loop above
-            my $o = Config::Loader->new_source("Files",@args);
+            my $o = Config::Loader->new_source("FilesTest",@args);
 
             is_deeply(
                 $o->sources, $expected_sources,

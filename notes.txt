@@ -1,8 +1,3 @@
-# make ZOMG use C::L, not C::L become ZOMG
-
-# grock filters, essentially a hook to process config values, see example. Also see Catalyst __foo syntax for relevant use case, see http://search.cpan.org/~bobtfish/Catalyst-Plugin-ConfigLoader-0.33/lib/Catalyst/Plugin/ConfigLoader.pm#config_substitutions%28_$value_%29
-
-# See relevant modules:
-## MooseX::ConfigFromFile
-## MooseX::Attribute::ENV
-## MooseX::Getopt
+# grock filters, essentially a hook to process config values, see
+  example. Also see Catalyst __foo syntax for relevant use case, see
+  http://search.cpan.org/~bobtfish/Catalyst-Plugin-ConfigLoader-0.33/lib/Catalyst/Plugin/ConfigLoader.pm#config_substitutions%28_$value_%29

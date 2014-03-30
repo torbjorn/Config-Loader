@@ -67,11 +67,9 @@ has no_env => (
 );
 
 sub BUILDARGS {
-
     my ($class, @args) = @_;
 
     my $args;
-
     if (  (ref($args[0])||'') eq 'HASH'  ) {
         $args = $args[0];
     }

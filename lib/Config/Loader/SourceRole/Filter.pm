@@ -12,3 +12,6 @@ sub load_config {
 }
 
 1;
+
+## Rewrite this? shouldn't require a distinct class to use this, would
+## be nice if it would fit on P::D or ::Merged

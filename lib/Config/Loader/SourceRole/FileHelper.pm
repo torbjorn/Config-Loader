@@ -2,7 +2,7 @@ package Config::Loader::SourceRole::FileHelper;
 
 use Moo::Role;
 
-requires qw/sources source_objects/;
+requires qw/sources loader/;
 
 sub _keys_to_propagate {
     return qw/load_args load_type/;
@@ -18,43 +18,30 @@ sub _keys_to_propagate {
 sub BUILDARGS {
     my ($class, @args) = @_;
 
-    ## The sub that does it
-    my $build_sources_in_hash = sub {
-
-        my $args = shift;
-
-        ## propagate certain arguments to the File objects
-        my %file_arg;
-        for (_keys_to_propagate) {
-            if ( exists $args->{$_} ) {
-                $file_arg{$_} = delete $args->{$_};
-            }
-        }
-
-        ## modify the hash and setup sources from supplied 'files'
-        $args->{sources} //= [];
-
-        push @{ $args->{sources} },
-            map { [ File => { %file_arg, file => $_ } ] }
-            @{delete $args->{files} or []}
-
-    };
-
+    my $args;
     if (  (ref($args[0])||'') eq 'HASH'  ) {
-
-        $build_sources_in_hash->($args[0]);
-        return $args[0];
-
+        $args = $args[0];
     }
-    ## pass it as is and let any errors bouble
     else {
-
-        my $args = {@args};
-        $build_sources_in_hash->($args);
-
-        return $args;
-
+        $args = {@args};
     }
+
+    ## propagate certain arguments to the File objects
+    my %file_arg;
+    for (_keys_to_propagate) {
+        if ( exists $args->{$_} ) {
+            $file_arg{$_} = delete $args->{$_};
+        }
+    }
+
+    ## modify the hash and setup sources from supplied 'files'
+    $args->{sources} //= [];
+
+    push @{ $args->{sources} },
+        map { [ File => { %file_arg, file => $_ } ] }
+            @{delete $args->{files} or []};
+
+    return $args;
 
 };
 
@@ -66,7 +53,8 @@ sub files_loaded {
     return
         map { @{$_->files_loaded} }
         grep { $_->isa("Config::Loader::Source::File") }
-        @{ $self->source_objects };
+        ## This needs to be fixed: P::D may give a Merged or a Filter
+        @{ $self->loader->source->source_objects };
 
 }
 
