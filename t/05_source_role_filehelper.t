@@ -2,7 +2,6 @@
 
 use warnings;
 use strict;
-use Config::Loader qw(Files);
 use Test::More;
 use Test::Deep;
 
