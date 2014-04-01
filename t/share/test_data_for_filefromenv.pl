@@ -58,4 +58,16 @@
         },
     },
 
+    {
+        line    => __LINE__,
+        title => "Different env_lookup - >1 env_lookup's",
+        args => { name => "myapp", env_lookup => [qw/foobar myfile/] },
+        env => { MYFILE_CONFIG => "t/etc/config" },
+        get => {
+            foo  => "bar",
+            blee => "baz",
+            bar  => [ "this", "that" ],
+        },
+    },
+
 ];

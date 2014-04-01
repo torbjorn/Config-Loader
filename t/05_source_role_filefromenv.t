@@ -4,12 +4,10 @@ use warnings;
 use strict;
 use Test::More;
 use Test::Deep;
-use Config::Loader;
 
 {
-    package Config::Loader::Source::RoleTest;
+    package RoleTest;
     use Moo;
-
     extends "Config::Loader::Source::Profile::Default";
 
     has name => ( is => 'ro', required => 1 );
@@ -18,25 +16,25 @@ use Config::Loader;
 
 }
 
-{
+my $tests = do 't/share/test_data_for_filefromenv.pl';
 
-    local $ENV{MYAPP_CONFIG} = "t/etc/config";
+for my $test (@$tests) {
+
+    my %h = %{ $test->{env} };
+
+    local @ENV{keys %h} = values %h;
 
     my $o = Config::Loader->new_source(
-        'RoleTest',
-        { name => "myapp" }
+        '+RoleTest',
+        $test->{args},
     );
 
     my $cfg = $o->load_config;
 
-    is_deeply $cfg,
-        {
-            foo  => "bar",
-            blee => "baz",
-            bar  => [ "this", "that" ],
-        }, "config loaded";
+    cmp_deeply( $cfg, $test->{get}, $test->{title} );
 
 }
+
 
 
 

@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use Test::More;
 use Test::Deep;
+use Config::Loader;
 
 {
     package Config::Loader::Source::FilesTest;
@@ -14,45 +15,7 @@ use Test::Deep;
 
 }
 
-my $tests = [
-    {
-        title => "Many conf files",
-        files => [qw(t/etc/config t/etc/stem1.conf t/etc/stem1.pl)],
-        true_file_names => [qw(t/etc/config.perl t/etc/stem1.conf t/etc/stem1.pl)],
-        get => {
-            foo => "bar",
-            baz => "test",
-            blee => "baz",
-            bar => [ "this", "that" ],
-        },
-        line    => __LINE__,
-    },
-    {
-        title => "One conf file",
-        files => [qw(t/etc/config)],
-        true_file_names => [qw(t/etc/config.perl)],
-        get => {
-            foo => "bar",
-            blee => "baz",
-            bar => [ "this", "that" ],
-        },
-        line    => __LINE__,
-    },
-    {
-        title => "File without file returns {}",
-        files => [ ],
-        true_file_names => [ ],
-        get => { },
-        line    => __LINE__,
-    },
-    {
-        title => "File with invalid file returns {}",
-        files => ["/invalid/path"],
-        true_file_names => [ ],
-        get => { },
-        line    => __LINE__,
-    },
-];
+my $tests = do 't/share/test_data_for_filehelper.pl';
 
 for my $test (@$tests) {
 
@@ -87,8 +50,6 @@ for my $test (@$tests) {
                 $expected_config,
                 $variation->{title}.': config loaded (OO)',
             );
-
-            # note explain $o->source_objects->[1]->files_loaded;
 
             cmp_deeply(
                 [$o->files_loaded],

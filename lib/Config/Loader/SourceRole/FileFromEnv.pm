@@ -82,8 +82,8 @@ around BUILDARGS => sub {
 
     if ( not $args->{no_env} ) {
 
-        my $e = $args->{env_lookups};
-        $args->{env_lookups} = ref $e eq "ARRAY" && $e || [$e];
+        my $e = $args->{env_lookup};
+        $args->{env_lookup} = ref $e eq "ARRAY" && $e || [$e];
 
         ## file from env takes precedence
         delete $args->{File};
