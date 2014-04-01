@@ -51,6 +51,7 @@ whenever the classes are about to report files
 use Moo::Role;
 use Sub::Quote 'quote_sub';
 use MooX::HandlesVia;
+use File::Spec qw(catfile);
 
 requires qw/name sources/;
 
@@ -77,9 +78,17 @@ around BUILDARGS => sub {
         my $e = $args->{env_lookups};
         $args->{env_lookups} = ref $e eq "ARRAY" && $e || [$e];
 
-        for my $prefix ( grep defined, $args->{name}, @{ $args->{env_lookups} } ) {
+        ## file from env takes precedence
+        delete $args->{File};
+
+        for my $prefix ( grep defined, $args->{name}, @{ $args->{env_lookup} } ) {
             my $value = _env($prefix,'CONFIG');
             if (defined $value) {
+
+                if ( -d $value ) {
+                    $value = catfile( $value, $args->{name} );
+                }
+
                 push @{ $args->{sources} }, [ File => { file => $value } ];
                 last;
             }
