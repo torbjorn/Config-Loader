@@ -11,7 +11,7 @@ sub test_text {
 
     my($test,$additional) = @_;
 
-    $additional = ' - : ' . $additional
+    $additional = ' - ' . $additional
         if defined $additional;
 
     return sprintf '%s, %d: %s%s',
