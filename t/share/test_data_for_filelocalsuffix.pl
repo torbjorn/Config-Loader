@@ -11,7 +11,7 @@
             name => "MyApp",
             foo => "not bar after all!",
         },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -25,7 +25,7 @@
             name => "MyApp",
             foo => "bar",
         },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
     {
@@ -39,7 +39,7 @@
             name => "MyApp",
             foo => "not bar after all!",
         },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -53,7 +53,7 @@
             name => "MyApp",
             foo => "bar",
         },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
     {
@@ -68,7 +68,7 @@
             foo => "not bar after all!",
             baz => "test",
         },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -83,7 +83,7 @@
             foo => "bar",
             baz => "test",
         },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
     {
@@ -116,7 +116,7 @@
             blee => "baz",
             bar => [ "this", "that" ],
         },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -132,7 +132,7 @@
             blee => "baz",
             bar => [ "this", "that" ],
         },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
     {
@@ -143,7 +143,7 @@
         expected_files => [ ],
         true_file_names => [ ],
         get => { },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -154,7 +154,7 @@
         expected_files => [ ],
         true_file_names => [ ],
         get => { },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
     {
@@ -165,7 +165,7 @@
         expected_files => [qw(/invalid/path /invalid/path_local)],
         true_file_names => [ ],
         get => { },
-        no_local => 0,
+        args => { no_local => 0 },
     },
 
     {
@@ -176,7 +176,7 @@
         expected_files => [qw(/invalid/path)],
         true_file_names => [ ],
         get => { },
-        no_local => 1,
+        args => { no_local => 1 },
     },
 
 ];
