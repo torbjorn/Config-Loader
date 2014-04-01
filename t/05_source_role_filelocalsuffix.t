@@ -16,6 +16,8 @@ use Config::Loader;
 
 }
 
+use t::lib::TestUtils;
+
 my $tests = do 't/share/test_data_for_filelocalsuffix.pl';
 
 for my $test (@$tests) {
@@ -36,18 +38,16 @@ for my $test (@$tests) {
 
         $o->loader; # trigger _build_loader that injects _local files
 
-
         cmp_deeply(
             $o->sources, $expected_sources,
-            'sources correct setup from input (OO)'
+            test_text( $test, 'sources correct setup from input (OO)' )
         );
 
         is_deeply(
             $o->load_config,
             $expected_config,
-            'config loaded (OO)',
+            test_text( $test, 'config loaded (OO)' ),
         );
-
 
         my @files_actually_loaded =
             map { @{$_->files_loaded} }
@@ -57,7 +57,7 @@ for my $test (@$tests) {
         cmp_deeply(
             [@files_actually_loaded],
             bag( grep -e, @{$test->{true_file_names}} ),
-            "files loaded"
+            test_text( $test, "files loaded" )
         );
 
     }
