@@ -30,18 +30,16 @@ for my $test (@$tests) {
     my @files = @{ $test_obj->files };
 
     my %args = %{ $test_obj->args };
-    @args{qw/no_env no_local/} = (1,1);
+    $args{no_env} = 1;
 
-    $args{sources} = $test_obj->sources_from("files");
     my @expected_files = @{$test_obj->expected_files};
 
     my $expected_sources = $test_obj->sources_from("expected_files");
     my $expected_config = $test->{get};
 
-    subtest 'Test data at line '.$test->{line} => sub {
-
-        my $obj_gen = sub {
+    my $obj_gen = sub {
             my $roles = shift;
+            $args{sources} = $test_obj->sources_from("files");
             my $o = Config::Loader->new_source("+FileLocalSuffixTest",%args);
             if ( defined $roles ) {
                 ## $roles must be an ARRAY at this point, not enforced
@@ -53,15 +51,16 @@ for my $test (@$tests) {
                 Role::Tiny->apply_roles_to_object( $o, @$roles );
             }
             return $o;
-          };
+        };
 
-        my @roles_to_test = permute_roles_except("FileLocalSuffix");
+    my @roles_to_test = permute_roles_except("FileLocalSuffix");
+
+    subtest 'Test data at line '.$test->{line} => sub {
 
         for my $roles ( @roles_to_test ) {
 
             my $roles_text = defined $roles ? join ", ", map { s/.*:://; $_ } @$roles : "";
-
-            note "Testing with roles $roles_text" if $roles_text;
+            note "Testing with additional roles: $roles_text" if $roles_text;
 
             my $o = $obj_gen->($roles);
 
@@ -92,8 +91,6 @@ for my $test (@$tests) {
         }
 
     };
-
-    last;
 
 }
 
