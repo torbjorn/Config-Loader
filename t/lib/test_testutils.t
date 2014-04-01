@@ -8,29 +8,20 @@ use Test::FailWarnings;
 
 use t::lib::TestUtils;
 
-{
-    my $o = TestBase->new;
+throws_ok { permute_roles_except("foo") }
+    qr/Role must be one of/,
+    "Bad role causes error";
 
-    throws_ok { object_with_permuted_roles($o, "foo") }
-        qr/Starting role must be one of/,
-            "Bad role causes error";
-}
+throws_ok { permute_roles_except }
+    qr/Need a role to exclude/,
+    "Missing role causes error";
 
-{
-    my $o = TestBase->new;
 
-    throws_ok { object_with_permuted_roles($o) }
-        qr/Need one fixed role/,
-            "Missing role causes error";
-}
+note "Testing role permutations on FileFromEnv";
 
 {
-    note "Testing role permutations on FileFromEnv";
-    my $o = TestBase->new;
-
-    my @roles = object_with_permuted_roles( $o, "FileFromEnv" );
-
-    ok( $o->does("Config::Loader::SourceRole::FileFromEnv"), "object does FileFromEnv" );
+    my @roles = permute_roles_except( "FileFromEnv" );
+    shift @roles;
 
     cmp_deeply(
         \@roles,
@@ -44,16 +35,14 @@ use t::lib::TestUtils;
         ),
         "Role permutations ok"
     );
-
 }
+
 
 {
     note "Testing role permutations on FileHelper";
-    my $o = TestBase->new;
 
-    my @roles = object_with_permuted_roles( $o, "FileHelper" );
-
-    ok( $o->does("Config::Loader::SourceRole::FileHelper"), "object does FileHelper" );
+    my @roles = permute_roles_except( "FileHelper" );
+    shift @roles;
 
     cmp_deeply(
         \@roles,
@@ -71,16 +60,14 @@ use t::lib::TestUtils;
         ),
         "Role permutations ok"
     );
-
 }
+
 
 {
     note "Testing role permutations on FileLocalSuffix";
-    my $o = TestBase->new;
 
-    my @roles = object_with_permuted_roles( $o, "FileLocalSuffix" );
-
-    ok( $o->does("Config::Loader::SourceRole::FileLocalSuffix"), "object does FileLocalSuffix" );
+    my @roles = permute_roles_except( "FileLocalSuffix" );
+    shift @roles;
 
     cmp_deeply(
         \@roles,
@@ -98,7 +85,7 @@ use t::lib::TestUtils;
         ),
         "Role permutations ok"
     );
-
 }
+
 
 done_testing;
