@@ -5,6 +5,9 @@ use strict;
 use Test::More;
 use Test::Deep;
 use Config::Loader;
+use File::Basename;
+
+use t::lib::TestUtils;
 
 {
     package Config::Loader::Source::FilesTest;
@@ -42,19 +45,19 @@ for my $test (@$tests) {
 
             is_deeply(
                 $o->sources, $expected_sources,
-                $variation->{title}.': sources correct setup from input (OO)'
+                test_text( $test, 'sources correct setup from input (OO)' )
             );
 
             is_deeply(
                 $o->load_config,
                 $expected_config,
-                $variation->{title}.': config loaded (OO)',
+                test_text( $test, 'config loaded (OO)' )
             );
 
             cmp_deeply(
                 [$o->files_loaded],
                 bag( grep -e, @{$test->{true_file_names}} ),
-                "files loaded"
+                test_text( $test, 'correct files loaded (OO)' )
             );
 
         }
