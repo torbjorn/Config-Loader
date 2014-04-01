@@ -67,6 +67,13 @@ has no_env => (
     default => 0
 );
 
+## THIS MUST BE CHANGED TO GO BEFORE _build_loader!!
+## IMPORTANT - DO THIS!
+##
+## Mental note: ZOMG does a reload. Clear loader to mimic this
+## behaviour. As loader is rebuilt, any File sources added will be
+## taken care of.
+
 around BUILDARGS => sub {
 
     my($orig,$class) = (shift,shift);
