@@ -1,6 +1,7 @@
 [
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Vanilla find _local file from stem",
         files => [qw(t/etc/myapp)],
@@ -14,6 +15,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Don't find _local file from stem",
         files => [qw(t/etc/myapp)],
@@ -26,10 +28,8 @@
         no_local => 1,
     },
 
-
-
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File with ext and _local",
         files => [qw(t/etc/myapp.conf)],
@@ -43,6 +43,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File with ext and NO _local",
         files => [qw(t/etc/myapp.conf)],
@@ -55,10 +56,8 @@
         no_local => 1,
     },
 
-
-
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Mixing files that have and don't have a _local",
         files => [qw(t/etc/myapp t/etc/stem1.pl)],
@@ -72,8 +71,8 @@
         no_local => 0,
     },
 
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Mixing files that have and don't have a _local - no local",
         files => [qw(t/etc/myapp t/etc/stem1.pl)],
@@ -87,10 +86,8 @@
         no_local => 1,
     },
 
-
-
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Many conf files",
         files => [qw(t/etc/config t/etc/stem1.conf t/etc/stem1.pl)],
@@ -122,8 +119,8 @@
         no_local => 0,
     },
 
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Many conf files - no local",
         files => [qw(t/etc/config t/etc/stem1.conf t/etc/stem1.pl)],
@@ -138,11 +135,8 @@
         no_local => 1,
     },
 
-
-
-
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File without file returns {}",
         files => [ ],
@@ -151,7 +145,9 @@
         get => { },
         no_local => 0,
     },
+
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File without file returns {} - no local",
         files => [ ],
@@ -161,9 +157,8 @@
         no_local => 1,
     },
 
-
-
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File with invalid file returns {}",
         files => ["/invalid/path"],
@@ -174,6 +169,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "File with invalid file returns {} - no local",
         files => [qw(/invalid/path)],

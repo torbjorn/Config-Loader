@@ -4,6 +4,9 @@ use warnings;
 use strict;
 use Test::More;
 use Test::Deep;
+use File::Basename;
+
+use t::lib::TestUtils;
 
 {
     package RoleTest;
@@ -31,7 +34,7 @@ for my $test (@$tests) {
 
     my $cfg = $o->load_config;
 
-    cmp_deeply( $cfg, $test->{get}, $test->{title} );
+    cmp_deeply( $cfg, $test->{get}, test_text($test) );
 
 }
 

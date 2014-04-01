@@ -1,6 +1,7 @@
 [
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Vanilla - find file from env",
         args => { name => "myapp" },
@@ -13,6 +14,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Vanilla - find file from env takes precedence",
         args => { name => "myapp2", File => {file => "t/etc/config"} },
@@ -23,6 +25,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Vanilla - no_env prevents env file lookup",
         args => { name => "myapp2", File => {file => "t/etc/config"}, no_env => 1 },
@@ -35,6 +38,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Different env_lookup",
         args => { name => "myapp", env_lookup => [qw/myfile/] },
@@ -47,6 +51,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Different env_lookup - array coercion",
         args => { name => "myapp", env_lookup => "myfile" },
@@ -59,6 +64,7 @@
     },
 
     {
+        datafile => __FILE__,
         line    => __LINE__,
         title => "Different env_lookup - >1 env_lookup's",
         args => { name => "myapp", env_lookup => [qw/foobar myfile/] },
