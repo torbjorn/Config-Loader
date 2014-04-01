@@ -93,7 +93,7 @@ my $tests = [
 
     {
         line    => __LINE__,
-        title => "Mixing files that have and don't have a _local",
+        title => "Mixing files that have and don't have a _local - no local",
         files => [qw(t/etc/myapp t/etc/stem1.pl)],
         expected_files => [qw(t/etc/myapp t/etc/stem1.pl)],
         true_file_names => [qw(t/etc/myapp.conf t/etc/stem1.pl)],
