@@ -234,13 +234,13 @@ for my $test (@$tests) {
         );
 
 
-        my @files_loaded =
+        my @files_actually_loaded =
             map { @{$_->files_loaded} }
                 grep { $_->isa("Config::Loader::Source::File") }
                     @{ $o->loader->source->source_objects };
 
         cmp_deeply(
-            [@files_loaded],
+            [@files_actually_loaded],
             bag( grep -e, @{$test->{true_file_names}} ),
             "files loaded"
         );
