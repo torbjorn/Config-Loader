@@ -76,7 +76,7 @@ sub test_text {
 
 ## Section for permuted roles testing
 
-use Math::Combinatorics qw/combine/;
+use Math::Combinatorics qw/combine permute/;
 require Role::Tiny;
 
 my @roles_to_test = map {
@@ -111,6 +111,17 @@ sub permute_roles_except {
         combine( $_, @roles )
     } 1..(0+@roles);
     unshift @role_combinations, undef;
+
+    ## For each role combination, add $role, and then put in all
+    ## possible permutations
+    for ( @role_combinations ) {
+        push @$_, $role;
+
+        ## bit of an uggly alias operation, but it works
+        my @permutations = permute(@$_);
+        $_ = [@permutations];
+
+    }
 
     return @role_combinations;
 
