@@ -20,7 +20,7 @@ throws_ok { permute_roles_except }
 note "Testing role permutations on FileFromEnv";
 
 ## some helper variables:
-my $bag_of_tea = bag(
+my @bag_of_tea = (
 
     [
         'Config::Loader::SourceRole::FileLocalSuffix',
@@ -64,29 +64,24 @@ my $bag_of_tea = bag(
         \@roles,
         bag(
 
-            bag(
-                [qw(
-                      Config::Loader::SourceRole::FileLocalSuffix
-                      Config::Loader::SourceRole::FileFromEnv
-               )],
-                [qw(
-                      Config::Loader::SourceRole::FileFromEnv
-                      Config::Loader::SourceRole::FileLocalSuffix
-               )],
-            ),
+            [
+                'Config::Loader::SourceRole::FileLocalSuffix',
+                'Config::Loader::SourceRole::FileFromEnv',
+            ],
+            [
+                'Config::Loader::SourceRole::FileFromEnv',
+                'Config::Loader::SourceRole::FileLocalSuffix',
+            ],
+            [
+                'Config::Loader::SourceRole::FileHelper',
+                'Config::Loader::SourceRole::FileFromEnv',
+            ],
+            [
+                'Config::Loader::SourceRole::FileFromEnv',
+                'Config::Loader::SourceRole::FileHelper',
+            ],
 
-            bag(
-                [qw(
-                      Config::Loader::SourceRole::FileHelper
-                      Config::Loader::SourceRole::FileFromEnv
-               )],
-                [qw(
-                      Config::Loader::SourceRole::FileFromEnv
-                      Config::Loader::SourceRole::FileHelper
-               )]
-            ),
-
-            $bag_of_tea,
+            @bag_of_tea,
 
         ),
         "Role permutations ok"
@@ -104,29 +99,25 @@ my $bag_of_tea = bag(
         \@roles,
         bag(
 
-            bag(
-                [
-                    'Config::Loader::SourceRole::FileFromEnv',
-                    'Config::Loader::SourceRole::FileHelper',
-                ],
-                [
-                    'Config::Loader::SourceRole::FileHelper',
-                    'Config::Loader::SourceRole::FileFromEnv',
-                ],
-            ),
+            [
+                'Config::Loader::SourceRole::FileFromEnv',
+                'Config::Loader::SourceRole::FileHelper',
+            ],
+            [
+                'Config::Loader::SourceRole::FileHelper',
+                'Config::Loader::SourceRole::FileFromEnv',
+            ],
 
-            bag(
-                [
-                    'Config::Loader::SourceRole::FileHelper',
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                ],
-                [
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                    'Config::Loader::SourceRole::FileHelper',
-                ],
-            ),
+            [
+                'Config::Loader::SourceRole::FileHelper',
+                'Config::Loader::SourceRole::FileLocalSuffix',
+            ],
+            [
+                'Config::Loader::SourceRole::FileLocalSuffix',
+                'Config::Loader::SourceRole::FileHelper',
+            ],
 
-            $bag_of_tea,
+            @bag_of_tea,
 
         ),
         "Role permutations ok"
@@ -134,6 +125,7 @@ my $bag_of_tea = bag(
 }
 
 {
+
     note "Testing role permutations on FileLocalSuffix";
 
     my @roles = permute_roles_except( "FileLocalSuffix" );
@@ -143,28 +135,25 @@ my $bag_of_tea = bag(
         \@roles,
         bag(
 
-            bag(
-                [
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                    'Config::Loader::SourceRole::FileFromEnv',
-                ],
-                [
-                    'Config::Loader::SourceRole::FileFromEnv',
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                ],
-            ),
-            bag(
-                [
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                    'Config::Loader::SourceRole::FileHelper',
-                ],
-                [
-                    'Config::Loader::SourceRole::FileHelper',
-                    'Config::Loader::SourceRole::FileLocalSuffix',
-                ],
-            ),
+            [
+                'Config::Loader::SourceRole::FileLocalSuffix',
+                'Config::Loader::SourceRole::FileFromEnv',
+            ],
+            [
+                'Config::Loader::SourceRole::FileFromEnv',
+                'Config::Loader::SourceRole::FileLocalSuffix',
+            ],
 
-            $bag_of_tea,
+            [
+                'Config::Loader::SourceRole::FileLocalSuffix',
+                'Config::Loader::SourceRole::FileHelper',
+            ],
+            [
+                'Config::Loader::SourceRole::FileHelper',
+                'Config::Loader::SourceRole::FileLocalSuffix',
+            ],
+
+            @bag_of_tea,
 
         ),
         "Role permutations ok"
