@@ -50,27 +50,29 @@ my $test_data = [
 
 ];
 
-## Create all variations of constructor
+## Create 4 variations of constructor
 [ map {
+
+    my %extra = ( no_env => 1, no_local => 1 );
 
     ## 1. hash constructor with files argument
     my %variation_1 = %$_;
-    $variation_1{args} = [ files => [ @{$_->{files}} ] ];
+    $variation_1{args} = [ files => [ @{$_->{files}} ], %extra ];
     $variation_1{title} .= "; hash constructor with files argument";
 
     ## 2. hash ref constructor with files argument
     my %variation_2 = %$_;
-    $variation_2{args} = [ { files => [ @{$_->{files}} ] } ];
+    $variation_2{args} = [ { files => [ @{$_->{files}} ], %extra } ];
     $variation_2{title} .= "; hash ref constructor with files argument";
 
     ## 3. hash constuctor with File sources
     my %variation_3 = %$_;
-    $variation_3{args} = [  sources => [ map [ File => { file => $_ } ], @{$_->{files}} ] ];
+    $variation_3{args} = [  sources => [ map [ File => { file => $_ } ], @{$_->{files}} ], %extra ];
     $variation_3{title} .= "; hash constructor with File sources";
 
     ## 4. hash ref constructof wirh File sources
     my %variation_4 = %$_;
-    $variation_4{args} = [ {sources => [ map [ File => { file => $_ } ], @{$_->{files}} ] } ];
+    $variation_4{args} = [ {sources => [ map [ File => { file => $_ } ], @{$_->{files}} ], %extra } ];
     $variation_4{title} .= "; hash ref constructor with File sources";
 
     ( {%variation_1},{%variation_2},{%variation_3},{%variation_4} );
