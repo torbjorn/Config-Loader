@@ -19,7 +19,7 @@ throws_ok { permute_roles_except }
 
 note "Testing role permutations on FileFromEnv";
 
-## some helper variables:
+## a helper variables:
 my @bag_of_tea = (
 
     [
@@ -55,7 +55,6 @@ my @bag_of_tea = (
 
 );
 
-
 {
     my @roles = permute_roles_except( "FileFromEnv" );
     shift @roles;
@@ -87,7 +86,6 @@ my @bag_of_tea = (
         "Role permutations ok"
     );
 }
-
 
 {
     note "Testing role permutations on FileHelper";
@@ -159,6 +157,5 @@ my @bag_of_tea = (
         "Role permutations ok"
     );
 }
-
 
 done_testing;
