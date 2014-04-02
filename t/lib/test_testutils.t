@@ -57,13 +57,15 @@ my @bag_of_tea = (
 
 {
     my @roles = permute_roles_except( "FileFromEnv" );
-    shift @roles;
 
     cmp_deeply(
         \@roles,
         bag(
 
             [
+                'Config::Loader::SourceRole::FileFromEnv'
+            ],
+            [
                 'Config::Loader::SourceRole::FileLocalSuffix',
                 'Config::Loader::SourceRole::FileFromEnv',
             ],
@@ -72,12 +74,12 @@ my @bag_of_tea = (
                 'Config::Loader::SourceRole::FileLocalSuffix',
             ],
             [
-                'Config::Loader::SourceRole::FileHelper',
                 'Config::Loader::SourceRole::FileFromEnv',
+                'Config::Loader::SourceRole::FileHelper',
             ],
             [
-                'Config::Loader::SourceRole::FileFromEnv',
                 'Config::Loader::SourceRole::FileHelper',
+                'Config::Loader::SourceRole::FileFromEnv',
             ],
 
             @bag_of_tea,
@@ -91,11 +93,14 @@ my @bag_of_tea = (
     note "Testing role permutations on FileHelper";
 
     my @roles = permute_roles_except( "FileHelper" );
-    shift @roles;
 
     cmp_deeply(
         \@roles,
         bag(
+
+            [
+                'Config::Loader::SourceRole::FileHelper',
+            ],
 
             [
                 'Config::Loader::SourceRole::FileFromEnv',
@@ -127,11 +132,14 @@ my @bag_of_tea = (
     note "Testing role permutations on FileLocalSuffix";
 
     my @roles = permute_roles_except( "FileLocalSuffix" );
-    shift @roles;
 
     cmp_deeply(
         \@roles,
         bag(
+
+            [
+                'Config::Loader::SourceRole::FileLocalSuffix',
+            ],
 
             [
                 'Config::Loader::SourceRole::FileLocalSuffix',
