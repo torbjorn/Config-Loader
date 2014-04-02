@@ -7,19 +7,6 @@ use File::Basename;
 use base 'Exporter';
 our @EXPORT = qw/test_text permute_roles_except/;
 
-sub test_text {
-
-    my($test,$additional) = @_;
-
-    $additional = ' - ' . $additional
-        if defined $additional;
-
-    return sprintf '%s, %d: %s%s',
-        basename($test->{datafile}), $test->{line}, $test->{title},
-            $additional||'';
-
-}
-
 ## work test values from test hash:
 ## args: constructor args
 ## get: test values
@@ -68,11 +55,27 @@ sub test_text {
 
     }
 
+    sub test_text {
+
+        my $self = shift;
+
+        my($additional) = @_;
+
+        $additional = ' - ' . $additional
+            if defined $additional;
+
+        return sprintf(
+            '%s, %d: %s%s',
+            basename($self->datafile),
+            $self->line,
+            $self->title,
+            $additional||''
+        );
+
+    }
+
     1;
 }
-
-
-
 
 ## Section for permuted roles testing
 
@@ -114,15 +117,13 @@ sub permute_roles_except {
 
     ## For each role combination, add $role, and then put in all
     ## possible permutations
-    for ( @role_combinations ) {
+    my @final_list = map {
+
         push @$_, $role;
+        permute(@$_);
 
-        ## bit of an uggly alias operation, but it works
-        my @permutations = permute(@$_);
-        $_ = [@permutations];
+    } @role_combinations;
 
-    }
-
-    return @role_combinations;
+    return @final_list;
 
 }
