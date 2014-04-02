@@ -113,16 +113,16 @@ sub permute_roles_except {
     my @role_combinations = map {
         combine( $_, @roles )
     } 1..(0+@roles);
-    unshift @role_combinations, undef;
 
-    ## For each role combination, add $role, and then put in all
-    ## possible permutations
+    ## For each role combination, add $role, and then permute
     my @final_list = map {
 
         push @$_, $role;
         permute(@$_);
 
     } @role_combinations;
+
+    unshift @final_list, [$role];
 
     return @final_list;
 
