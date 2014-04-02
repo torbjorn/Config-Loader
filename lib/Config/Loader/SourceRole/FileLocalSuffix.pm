@@ -1,6 +1,7 @@
 package Config::Loader::SourceRole::FileLocalSuffix;
 
 use Moo::Role;
+use namespace::clean;
 
 use Sub::Quote 'quote_sub';
 use MooX::HandlesVia;

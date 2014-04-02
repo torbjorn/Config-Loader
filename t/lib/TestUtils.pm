@@ -2,7 +2,6 @@ package t::lib::TestUtils;
 
 use strict;
 use warnings;
-use File::Basename;
 
 use base 'Exporter';
 our @EXPORT = qw/test_text permute_roles_except/;
@@ -22,6 +21,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
 {
     package TestData;
 
+    use File::Basename;
     use Moo;
 
     has get => ( is => "ro", default => sub {{}} );

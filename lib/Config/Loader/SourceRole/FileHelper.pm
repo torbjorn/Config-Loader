@@ -1,6 +1,7 @@
 package Config::Loader::SourceRole::FileHelper;
 
 use Moo::Role;
+use namespace::clean;
 
 requires qw/sources loader/;
 

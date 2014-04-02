@@ -49,6 +49,7 @@ whenever the classes are about to report files
 =cut
 
 use Moo::Role;
+use namespace::clean;
 use Sub::Quote 'quote_sub';
 use MooX::HandlesVia;
 use File::Spec qw(catfile);
@@ -73,7 +74,6 @@ has no_env => (
 ## Mental note: ZOMG does a reload. Clear loader to mimic this
 ## behaviour. As loader is rebuilt, any File sources added will be
 ## taken care of.
-
 around BUILDARGS => sub {
 
     my($orig,$class) = (shift,shift);
