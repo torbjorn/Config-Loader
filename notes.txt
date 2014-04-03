@@ -1,3 +1,5 @@
 # grock filters, essentially a hook to process config values, see
   example. Also see Catalyst __foo syntax for relevant use case, see
   http://search.cpan.org/~bobtfish/Catalyst-Plugin-ConfigLoader-0.33/lib/Catalyst/Plugin/ConfigLoader.pm#config_substitutions%28_$value_%29
+
+# Aim to have ::CLSource in each of the 3
