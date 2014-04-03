@@ -4,21 +4,9 @@ use warnings;
 use strict;
 use Test::More;
 use Test::Deep;
+require Moo::Role;
 
 use t::lib::TestUtils;
-
-{
-    package FileLocalSuffixTest;
-
-    use Moo;
-    use namespace::clean;
-    extends 'Config::Loader::Source::Profile::Default';
-
-    ## need this for test with other roles
-    has name => ( is => "ro" );
-}
-
-require Moo::Role;
 
 my $tests = do 't/share/test_data_for_filelocalsuffix.pl';
 
@@ -26,13 +14,13 @@ for my $test (@$tests) {
 
     my $test_obj = TestData->new($test);
 
-    my %args = %{ $test_obj->compose_args( no_env => 1 ) };
+    my $args = $test_obj->compose_args( no_env => 1 );
 
     my $obj_gen = sub {
 
             my $roles = shift;
 
-            local $args{sources} = $test_obj->sources_from("files");
+            local $args->{sources} = $test_obj->sources_from("files");
 
             for (@$roles) {
                 if ( !/^Config::Loader::SourceRole::/ ) {
@@ -41,17 +29,17 @@ for my $test (@$tests) {
             }
 
             my $cl = Moo::Role->create_class_with_roles(
-                "FileLocalSuffixTest",
+                "TestBaseClass",
                 @$roles,
             );
 
-            return $cl->new(%args);
+            return $cl->new($args);
 
         };
 
     my @roles_to_test = permute_roles_except("FileLocalSuffix");
 
-    subtest 'Test data at line '.$test->{line} => sub {
+    subtest 'Test data at line '.$test_obj->line => sub {
 
         for my $roles ( @roles_to_test ) {
 
@@ -59,13 +47,6 @@ for my $test (@$tests) {
             note "Testing with role combination: $roles_text";
 
             my $o = $obj_gen->($roles);
-
-            $o->loader; # trigger _build_loader that injects _local files
-
-            cmp_deeply(
-                $o->sources, $test_obj->sources_from("expected_files"),
-                $test_obj->test_text( 'sources correct setup from input (OO)' )
-            );
 
             is_deeply(
                 $o->load_config,
@@ -80,8 +61,13 @@ for my $test (@$tests) {
 
             cmp_deeply(
                 [@files_actually_loaded],
-                bag( grep -e, @{$test->{true_file_names}} ),
+                bag( grep -e, @{$test_obj->true_file_names} ),
                 $test_obj->test_text( 'files loaded' )
+            );
+
+            cmp_deeply(
+                $o->sources, $test_obj->sources_from("expected_files"),
+                $test_obj->test_text( 'sources correct setup from input (OO)' )
             );
 
         }

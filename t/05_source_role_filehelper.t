@@ -6,21 +6,9 @@ use Test::More;
 use Test::Deep;
 use Config::Loader;
 use File::Basename;
+require Moo::Role;
 
 use t::lib::TestUtils;
-
-{
-    package FilesTest;
-
-    use Moo;
-    extends 'Config::Loader::Source::Profile::Default';
-
-    ## need this for some of the roles
-    has name => (is => "ro");
-
-}
-
-require Moo::Role;
 
 my $tests = do 't/share/test_data_for_filehelper.pl';
 
@@ -43,7 +31,7 @@ for my $test (@$tests) {
             }
 
             my $cl = Moo::Role->create_class_with_roles(
-                "FilesTest",
+                "TestBaseClass",
                 @$roles,
             );
 

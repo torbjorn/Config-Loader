@@ -22,6 +22,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
     package TestData;
 
     use File::Basename;
+    use Hash::Merge::Simple qw(merge);
     use Moo;
 
     has get => ( is => "ro", default => sub {{}} );
@@ -31,7 +32,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
 
     has args => ( is => "ro", default => sub {{}} );
     has files => ( is => "ro", default => sub {[]} );
-    has true_file_names => ( is => "ro" );
+    has true_file_names => ( is => "ro", default => sub{ [] } );
     has expected_files => ( is => "lazy",
                             builder => sub {
                                 my $self = shift;
@@ -39,7 +40,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
                             });
 
     has sources => ( is => "rw" );
-    has env => ( is => "ro" );
+    has env => ( is => "ro", default => sub { {} } );
 
     sub sources_from {
 
@@ -74,10 +75,33 @@ our @EXPORT = qw/test_text permute_roles_except/;
 
     }
 
+    sub compose_args {
+        my $self = shift;
+        my %extra = @_;
+        return merge $self->args, \%extra;
+    }
+
+    sub env_mod_hash {
+        my $self = shift;
+        return %{ $self->env };
+    }
+
     1;
 }
 
 ## Section for permuted roles testing
+
+{
+    ## base class that roles will get applied to
+    package TestBaseClass;
+
+    use Moo;
+    extends 'Config::Loader::Source::Profile::Default';
+
+    ## need this for some of the roles
+    has name => (is => "ro");
+
+}
 
 use Math::Combinatorics qw/combine permute/;
 require Role::Tiny;

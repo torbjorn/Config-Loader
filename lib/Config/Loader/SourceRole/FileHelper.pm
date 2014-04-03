@@ -16,6 +16,7 @@ sub _keys_to_propagate {
 ## there is no need to, so this module could load other sources if
 ## someone wants to take the trouble, but we help loading files only,
 ## for other sources, the user is on his own
+
 sub BUILDARGS {
     my ($class, @args) = @_;
 
