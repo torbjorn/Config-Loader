@@ -27,20 +27,24 @@ sub BUILDARGS {
         $args = {@args};
     }
 
-    ## propagate certain arguments to the File objects
-    my %file_arg;
-    for (_keys_to_propagate) {
-        if ( exists $args->{$_} ) {
-            $file_arg{$_} = delete $args->{$_};
+    if ( exists $args->{files} ) {
+
+        ## propagate certain arguments to the File objects
+        my %file_arg;
+        for (_keys_to_propagate) {
+            if ( exists $args->{$_} ) {
+                $file_arg{$_} = delete $args->{$_};
+            }
         }
+
+        ## modify the hash and setup sources from supplied 'files'
+        $args->{sources} //= [];
+
+        push @{ $args->{sources} },
+            map { [ File => { %file_arg, file => $_ } ] }
+                @{delete $args->{files} or []};
+
     }
-
-    ## modify the hash and setup sources from supplied 'files'
-    $args->{sources} //= [];
-
-    push @{ $args->{sources} },
-        map { [ File => { %file_arg, file => $_ } ] }
-            @{delete $args->{files} or []};
 
     return $args;
 
