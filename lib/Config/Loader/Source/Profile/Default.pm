@@ -4,10 +4,6 @@ use Config::Loader ();
 use Module::Runtime qw(use_module);
 use Moo;
 
-    # use Data::Dumper;
-    # $Data::Dumper::Pad = "# ";
-
-
 has process_template   => (is => 'ro', default => sub { 1 } );
 has sources => (
     is => 'ro', default => sub { shift->_default_sources },

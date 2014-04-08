@@ -19,6 +19,7 @@ has load_type => (is => 'lazy', builder => sub {
 
 sub load_config {
   my ($self) = @_;
+
   my $raw_cfg = $self->_load_config_any;
 
   ## related to stems giving > 1 file

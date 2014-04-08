@@ -11,12 +11,12 @@ sub _keys_to_propagate {
 
 ## Transform the supplied files => [..] to a sources => [...] that is
 ## something that ::Merged would accept as sources
+## Also pick up a file => "file", input
 ##
 ## Technically this doesn't prevent other sources, and technically
 ## there is no need to, so this module could load other sources if
 ## someone wants to take the trouble, but we help loading files only,
 ## for other sources, the user is on his own
-
 sub BUILDARGS {
     my ($class, @args) = @_;
 
@@ -28,7 +28,17 @@ sub BUILDARGS {
         $args = {@args};
     }
 
-    if ( exists $args->{files} ) {
+    my $files_array = delete($args->{files}) // [];
+    my $file_argument = delete($args->{file});
+
+    if ( defined $files_array and ref $files_array ne "ARRAY" ) {
+        $files_array = [ $files_array ];
+    }
+
+    my @file_inputs = grep defined, @$files_array, $file_argument;
+
+    ## change to work wiht @file_inputs
+    if ( @file_inputs ) {
 
         ## propagate certain arguments to the File objects
         my %file_arg;
@@ -43,7 +53,7 @@ sub BUILDARGS {
 
         push @{ $args->{sources} },
             map { [ File => { %file_arg, file => $_ } ] }
-                @{delete $args->{files} or []};
+            @file_inputs;
 
     }
 
