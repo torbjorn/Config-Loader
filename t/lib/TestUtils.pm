@@ -39,7 +39,9 @@ our @EXPORT = qw/test_text permute_roles_except/;
                                 return $self->files
                             });
 
-    has sources => ( is => "rw" );
+    has sources => ( is => "rw",
+                 default => sub { TestBaseClass->_default_sources }
+             );
     has env => ( is => "ro", default => sub { {} } );
 
     sub sources_from {
@@ -53,6 +55,11 @@ our @EXPORT = qw/test_text permute_roles_except/;
         elsif ( $what eq "expected_files" ) {
             $self->sources( [ map [ File => { file => $_ } ], @{$self->expected_files} ] );
         }
+        else {
+            die "Don't know how to report sources from '$what'";
+        }
+
+        return $self->sources;
 
     }
 
