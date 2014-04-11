@@ -84,13 +84,24 @@ before _build_loader => sub {
                     $value = catfile( $value, $self->name );
                 }
 
-                ## At this point, the ENV value overrides all other sources.
-                ## 1: (possible File sources passed through constructor as "File")
-                delete $self->overrides->{$_} for grep $_ eq "File", keys %{$self->overrides};
-                ## 2: Remove any sources that are "File"
-                $self->sources([  grep $_->[0] ne "File", @{$self->sources}  ]);
+                ## At this point, the ENV value overrides all other
+                ## sources. However arguments to File sources needs to
+                ## be preserved
 
+                my @file_args;
+
+                ## 1: (possible File sources passed through constructor as "File")
+                if ( defined my $file_source = delete $self->overrides->{File} ) {
+                }
+
+
+
+                ## 2: Remove any sources that are "File"
+                $self->{sources} = [  grep $_->[0] ne "File", @{$self->sources}  ];
+
+                ## 3: Setup a new source for the file set in env
                 unshift @{ $self->sources }, [ File => { file => $value } ];
+
                 last;
 
             }

@@ -7,7 +7,7 @@ use Sub::Quote 'quote_sub';
 use MooX::HandlesVia;
 use File::Basename qw/fileparse/;
 use File::Spec::Functions qw/catfile/;
-
+use Devel::Dwarn;
 has no_local => (
    is => 'ro',
    default => quote_sub q{ 0 },
@@ -40,6 +40,8 @@ before _build_loader => sub {
         if ( $source->[0] eq "File" ) {
 
             if ( exists $source->[1]{file} ) {
+
+                print "# FLS: ADDING FILE\n";
 
                 my %source_args = %{$source->[1]};
                 my $file = delete $source_args{file};
