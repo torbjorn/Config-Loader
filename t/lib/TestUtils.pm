@@ -17,7 +17,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
 ## title: descriptive text of this test case
 ## env: key+values to set in %ENV
 
-## Trying to use an object for this.. growing complex now
+## Uses an object to keep track of test data
 {
     package TestData;
 
@@ -39,9 +39,7 @@ our @EXPORT = qw/test_text permute_roles_except/;
                                 return $self->files
                             });
 
-    has sources => ( is => "rw",
-                 default => sub { TestBaseClass->_default_sources }
-             );
+    has sources => ( is => "rw" );
     has env => ( is => "ro", default => sub { {} } );
 
     sub sources_from {
@@ -50,10 +48,10 @@ our @EXPORT = qw/test_text permute_roles_except/;
         $what //= "files";
 
         if ( $what eq "files" ) {
-            $self->sources( [ map [ File => { file => $_ } ], @{$self->files} ] );
+            return [ map [ File => { file => $_ } ], @{$self->files} ];
         }
         elsif ( $what eq "expected_files" ) {
-            $self->sources( [ map [ File => { file => $_ } ], @{$self->expected_files} ] );
+            return [ map [ File => { file => $_ } ], @{$self->expected_files} ];
         }
         else {
             die "Don't know how to report sources from '$what'";

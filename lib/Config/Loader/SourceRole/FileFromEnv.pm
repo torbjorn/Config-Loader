@@ -54,7 +54,7 @@ use Sub::Quote 'quote_sub';
 use MooX::HandlesVia;
 use File::Spec qw(catfile);
 
-requires qw/name sources/;
+requires qw/name sources _build_loader/;
 
 has env_lookup => (
    is => 'ro',
@@ -68,41 +68,35 @@ has no_env => (
     default => 0
 );
 
-## THIS MUST BE CHANGED TO GO BEFORE _build_loader!!
-## IMPORTANT - DO THIS!
-##
-## Mental note: ZOMG does a reload. Clear loader to mimic this
-## behaviour. As loader is rebuilt, any File sources added will be
-## taken care of.
-around BUILDARGS => sub {
+before _build_loader => sub {
 
-    my($orig,$class) = (shift,shift);
+    my $self = shift;
 
-    my $args = $orig->($class,@_);
+    if ( not $self->no_env ) {
 
-    if ( not $args->{no_env} ) {
+        for my $prefix ( grep defined, $self->name, $self->env_lookups ) {
 
-        my $e = $args->{env_lookup};
-        $args->{env_lookup} = ref $e eq "ARRAY" && $e || [$e];
-
-        ## file from env takes precedence
-        delete $args->{File};
-
-        for my $prefix ( grep defined, $args->{name}, @{ $args->{env_lookup} } ) {
             my $value = _env($prefix,'CONFIG');
+
             if (defined $value) {
 
                 if ( -d $value ) {
-                    $value = catfile( $value, $args->{name} );
+                    $value = catfile( $value, $self->name );
                 }
 
-                push @{ $args->{sources} }, [ File => { file => $value } ];
+                ## At this point, the ENV value overrides all other sources.
+                ## 1: (possible File sources passed through constructor as "File")
+                delete $self->overrides->{$_} for grep $_ eq "File", keys %{$self->overrides};
+                ## 2: Remove any sources that are "File"
+                $self->sources([  grep $_->[0] ne "File", @{$self->sources}  ]);
+
+                unshift @{ $self->sources }, [ File => { file => $value } ];
                 last;
+
             }
         }
 
     }
-    return $args;
 
 };
 

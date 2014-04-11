@@ -28,14 +28,19 @@ sub BUILDARGS {
         $args = {@args};
     }
 
-    my $files_array = delete($args->{files}) // [];
+    my $files_array = delete($args->{files});
     my $file_argument = delete($args->{file});
 
     if ( defined $files_array and ref $files_array ne "ARRAY" ) {
         $files_array = [ $files_array ];
     }
 
-    my @file_inputs = grep defined, @$files_array, $file_argument;
+    if ( defined $files_array or defined $file_argument ) {
+        ## Need this to prevent default sources
+        $args->{sources} //= [];
+    }
+
+    my @file_inputs = grep defined, @{ $files_array // [] }, $file_argument;
 
     ## change to work wiht @file_inputs
     if ( @file_inputs ) {
@@ -49,7 +54,7 @@ sub BUILDARGS {
         }
 
         ## modify the hash and setup sources from supplied 'files'
-        $args->{sources} //= [];
+        # $args->{sources} //= [];
 
         push @{ $args->{sources} },
             map { [ File => { %file_arg, file => $_ } ] }
