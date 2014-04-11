@@ -9,3 +9,6 @@
 
 * SourceRole::FileLocalSuffix
   * Needs a test to confirm other arguments to File gets copied.
+
+* Catalyst::Plugin::CnofigLoader::Environment
+  See if this can be covered by C::L too
