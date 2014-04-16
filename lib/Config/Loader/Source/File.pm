@@ -5,6 +5,8 @@ use Hash::Merge::Simple qw(merge);
 use File::Spec;
 use Moo;
 
+use Devel::Dwarn;
+
 with 'Config::Loader::SourceRole::OneArgNew';
 
 sub one_arg_name { 'file' }
@@ -21,6 +23,11 @@ sub load_config {
   my ($self) = @_;
 
   my $raw_cfg = $self->_load_config_any;
+
+  ## Sort them based on file name to make it consistent
+  $raw_cfg = [ sort {
+      (keys %$a)[0] cmp (keys %$b)[0]
+  } @$raw_cfg ];
 
   ## related to stems giving > 1 file
   if ( @$raw_cfg > 1 and not $ENV{CONFIG_LOADER_SOURCE_FILE_MANY_FILES_ALLOW} ) {
