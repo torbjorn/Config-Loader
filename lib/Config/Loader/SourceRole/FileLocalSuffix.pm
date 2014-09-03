@@ -41,8 +41,6 @@ before _build_loader => sub {
 
             if ( exists $source->[1]{file} ) {
 
-                print "# FLS: ADDING FILE\n";
-
                 my %source_args = %{$source->[1]};
                 my $file = delete $source_args{file};
 
