@@ -5,8 +5,6 @@ use Hash::Merge::Simple qw(merge);
 use File::Spec;
 use Moo;
 
-use Devel::Dwarn;
-
 with 'Config::Loader::SourceRole::OneArgNew';
 
 sub one_arg_name { 'file' }
