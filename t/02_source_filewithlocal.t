@@ -101,15 +101,19 @@ for my $test ( @{ $tests } ) {
     my @args = ref $test->{put} eq "ARRAY" ? @{$test->{put}} : %{$test->{put}};
 
     # Functional
-    # is_deeply( get_config( %{ $test->{put} } ), $test->{get},$test->{name}.' from line '.$test->{line} );
-    # OO
+    is_deeply(
+        get_config( @args ),
+        $test->{get},
+        'Fn: '.$test->{name}.' from line '.$test->{line}
+    );
 
+    # OO
     my $o = Config::Loader->new_source( 'FileWithLocal', @args );
 
     is_deeply(
         $o->load_config,
         $test->{get},
-        $test->{name}.' from line '.$test->{line}
+        'OO: '.$test->{name}.' from line '.$test->{line}
     );
 
 }
