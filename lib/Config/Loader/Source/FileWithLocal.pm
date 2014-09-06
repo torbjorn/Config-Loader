@@ -9,37 +9,6 @@ use File::Spec::Functions qw/catfile/;
 has source => (
     is => "lazy",
     handles => [qw/load_config/],
-    builder => sub {
-
-        my $self = shift;
-
-        my @sources;
-
-        if (defined $self->file) {
-
-            push @sources, [
-                'File' => $self->file_args,
-            ];
-
-            if ( not $self->no_local ) {
-
-                my( $name, $dirs, $suffix ) = fileparse( $self->file, qr/\.[^.]*/ );
-
-                my $new_with_local = $name . "_" . $self->local_suffix;
-                my $new_local_file = catfile( $dirs, $new_with_local );
-                $new_local_file .= $suffix ? $suffix : "";
-
-                push @sources, [
-                    'File' => $self->file_args($new_local_file)
-                ];
-
-            }
-
-        }
-
-        return Config::Loader::Source::Merged->new(sources => \@sources);
-
-    }
 );
 
 has no_local => (
@@ -67,6 +36,38 @@ sub file_args {
         defined $self->load_args ? (load_args => $self->load_args) : (),
         defined $self->load_type ? (load_type => $self->load_type) : (),
     };
+}
+
+sub _build_source {
+
+    my $self = shift;
+
+    my @sources;
+
+    if (defined $self->file) {
+
+        push @sources, [
+            'File' => $self->file_args,
+        ];
+
+        if ( not $self->no_local ) {
+
+            my( $name, $dirs, $suffix ) = fileparse( $self->file, qr/\.[^.]*/ );
+
+            my $new_with_local = $name . "_" . $self->local_suffix;
+            my $new_local_file = catfile( $dirs, $new_with_local );
+            $new_local_file .= $suffix ? $suffix : "";
+
+            push @sources, [
+                'File' => $self->file_args($new_local_file)
+            ];
+
+        }
+
+    }
+
+    return Config::Loader::Source::Merged->new(sources => \@sources);
+
 }
 
 1;
