@@ -6,10 +6,9 @@ use utf8::all;
 use Test::Most;
 use Test::Warnings;
 
-use Config::Loader::Source::Static;
-use Config::Loader::Source::Filter::Substitution;
+use Config::Loader;
 
-my $static = Config::Loader::Source::Static->new(
+my $static = Config::Loader->new_source( 'Static',
     config => {
         foo         => '__bar(5)__',
         math        => '2 + 2 = __two_plus_two__',
@@ -18,7 +17,7 @@ my $static = Config::Loader::Source::Static->new(
     }
 );
 
-ok( my $s = Config::Loader::Source::Filter::Substitution->new(source=>$static),
+ok( my $s = Config::Loader->new_source( 'Filter::Substitution', source => $static ),
     'object creation'
 );
 
