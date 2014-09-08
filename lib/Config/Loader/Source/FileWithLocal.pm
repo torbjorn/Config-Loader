@@ -50,7 +50,7 @@ sub _build_source {
             'File' => $self->file_args,
         ];
 
-        if ( not $self->no_local ) {
+        unless ( $self->no_local ) {
 
             my( $name, $dirs, $suffix ) = fileparse( $self->file, qr/\.[^.]*/ );
 
