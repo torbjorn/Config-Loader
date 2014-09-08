@@ -11,7 +11,8 @@ use Config::Loader::Source::Filter::Substitution;
 
 my $static = Config::Loader::Source::Static->new(
     config => {
-        foo => '__bar(5)__'
+        foo => '__bar(5)__',
+        math => '2 + 2 = __two_plus_two__',
     }
 );
 
@@ -20,12 +21,17 @@ ok( my $s = Config::Loader::Source::Filter::Substitution->new(source=>$static),
 );
 
 $s->substitute(
-    bar => sub { $_[1] + 10 }
+    bar => sub { $_[1] + 10 },
+    two_plus_two => sub { 2 + 2 },
 );
+
 
 cmp_deeply(
     $s->load_config,
-    { foo => 15 },
+    {
+        foo => 15,
+        math => '2 + 2 = 4',
+    },
     "very simple test case"
 );
 
