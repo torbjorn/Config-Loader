@@ -16,19 +16,19 @@ has _substitutions => (
 
 with 'Config::Loader::SourceRole::Filter';
 
-## This gets the object and the config after load
+## @_ = ($self, $cfg)
+## $cfg is the result of calling load_config on $self->source
 sub filter_config {
 
-    my $self = shift;
-    my ($cfg) = @_;
+    my ($self,$cfg) = (shift,shift);
 
     my $matcher = join( '|', $self->substitutions );
 
-    for ( %$cfg ) {
+    for ( values %$cfg ) {
         s{__($matcher)(?:\((.+?)\))?__}{ $self->substitution($1)->( $self, $2 ? split( /,/, $2 ) : () ) }eg;
     }
 
-    $cfg;
+    return $cfg;
 
 }
 
