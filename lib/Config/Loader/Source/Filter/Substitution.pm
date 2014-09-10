@@ -3,14 +3,8 @@ package Config::Loader::Source::Filter::Substitution;
 use Moo;
 use MooX::HandlesVia;
 
-has _substitutions => (
+has substitutions => (
     is => 'ro',
-    handles_via => 'Hash',
-    handles => {
-        substitution  => 'get',
-        substitute    => 'set',
-        substitutions => 'keys',
-    },
     default => sub { {} },
 );
 
@@ -22,10 +16,10 @@ sub filter_config {
 
     my ($self,$cfg) = (shift,shift);
 
-    my $matcher = join( '|', $self->substitutions );
+    my $matcher = join( '|', keys %{$self->substitutions} );
 
     for ( values %$cfg ) {
-        s{__($matcher)(?:\((.+?)\))?__}{ $self->substitution($1)->( $self, $2 ? split( /,/, $2 ) : () ) }eg;
+        s{__($matcher)(?:\((.+?)\))?__}{ $self->substitutions->{$1}->( $self, $2 ? split( /,/, $2 ) : () ) }eg;
     }
 
     return $cfg;
