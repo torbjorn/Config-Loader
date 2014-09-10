@@ -17,16 +17,16 @@ my $static = Config::Loader->new_source( 'Static',
     }
 );
 
-ok( my $s = Config::Loader->new_source( 'Filter::Substitution', source => $static ),
+ok( my $s = Config::Loader->new_source(
+    'Filter::Substitution',
+    source => $static,
+    substitutions => {
+        bar => sub { $_[1] + 10 },
+        two_plus_two => sub { 2 + 2 },
+        literal => sub { $_[1] },
+    }),
     'object creation'
 );
-
-$s->substitute(
-    bar => sub { $_[1] + 10 },
-    two_plus_two => sub { 2 + 2 },
-    literal => sub { $_[1] },
-);
-
 
 cmp_deeply(
     $s->load_config,
