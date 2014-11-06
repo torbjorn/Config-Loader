@@ -3,6 +3,7 @@ package Config::Loader::Source::FileFromEnv;
 use Moo;
 use MooX::HandlesVia;
 use Config::Loader ();
+use feature 'say';
 
 has name => qw/is ro required 1/;
 has env_lookup => (
@@ -29,7 +30,7 @@ sub _env_lookup {
         return $value if defined $value;
     }
 
-    return;
+    return undef;
 }
 
 sub _env (@) {
@@ -40,11 +41,11 @@ sub _env (@) {
 }
 
 sub path {
-    shift->_env_lookup('CONFIG')
+    return shift->_env_lookup('CONFIG');
 }
 
 sub suffix {
-    shift->_env_lookup('CONFIG_LOCAL_SUFFIX')
+    return shift->_env_lookup('CONFIG_LOCAL_SUFFIX');
 }
 
 sub load_config {
