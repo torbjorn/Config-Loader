@@ -10,7 +10,6 @@ has source => (
     is => "lazy",
     handles => [qw/load_config/],
 );
-
 has no_local => (
    is => 'ro',
    default => 0,
@@ -68,6 +67,15 @@ sub _build_source {
 
     return Config::Loader::Source::Merged->new(sources => \@sources);
 
+}
+
+sub files_loaded {
+    my $self = shift;
+    return ([
+        map { @{$_->files_loaded} }
+            grep { $_->can("files_loaded") }
+                @{ $self->source->source_objects }
+            ]);
 }
 
 1;
