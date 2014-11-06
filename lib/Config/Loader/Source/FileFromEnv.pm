@@ -11,10 +11,14 @@ has env_lookup => (
    coerce => sub { ref $_[0] eq "ARRAY" && $_[0] || [$_[0]] },
    default => sub { [] },
 );
+has no_env => qw/is ro/;
 
 sub _env_lookup {
 
     my $self = shift;
+
+    return if $self->no_env;
+
     my @suffix = @_;
 
     my $name = $self->name;
@@ -35,16 +39,21 @@ sub _env (@) {
     return $ENV{$key};
 }
 
+sub path {
+    shift->_env_lookup('CONFIG')
+}
+
+sub suffix {
+    shift->_env_lookup('CONFIG_LOCAL_SUFFIX')
+}
+
 sub load_config {
 
     my $self = shift;
 
-    my $path   = $self->_env_lookup('CONFIG');
-    my $suffix = $self->_env_lookup('CONFIG_LOCAL_SUFFIX');
-
     return {
-        file   => $path,
-        suffix => $suffix,
+        file   => $self->path,
+        suffix => $self->suffix,
     };
 
 }
