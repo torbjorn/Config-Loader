@@ -13,6 +13,8 @@ use t::lib::TestUtils;
 
 my $tests = do 't/share/test_data_for_filefromenv.pl';
 
+plan skip_all => "this concept is abandoned for now";
+
 for my $test (@$tests) {
 
     my $test_obj = TestData->new($test);
@@ -41,7 +43,6 @@ for my $test (@$tests) {
 
     my @roles_to_test = permute_roles_except("FileFromEnv");
 
-my $i;
     subtest 'Test data at line '.$test_obj->line => sub {
 
         for my $roles ( @roles_to_test ) {

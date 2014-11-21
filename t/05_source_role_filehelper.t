@@ -8,9 +8,12 @@ use Config::Loader;
 use File::Basename;
 require Moo::Role;
 
+plan skip_all => "this concept is abandoned for now";
+
 use t::lib::TestUtils;
 
 my $tests = do 't/share/test_data_for_filehelper.pl';
+
 
 for my $test (@$tests) {
 

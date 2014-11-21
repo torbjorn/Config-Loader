@@ -1,7 +1,7 @@
 package Config::Loader::Source::Filter::Substitution;
 
 use Moo;
-use MooX::HandlesVia;
+# use MooX::HandlesVia;
 
 has substitutions => (
     is => 'ro',

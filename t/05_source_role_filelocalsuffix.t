@@ -8,6 +8,8 @@ require Moo::Role;
 
 use t::lib::TestUtils;
 
+plan skip_all => "this concept is abandoned for now";
+
 my $tests = do 't/share/test_data_for_filelocalsuffix.pl';
 
 for my $test (@$tests) {
