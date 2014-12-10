@@ -8,6 +8,9 @@ use Test::Warn;
 use Test::Warnings;
 use Config::Loader qw( File );
 
+require_ok "Config::Any::General" or
+    BAIL_OUT "Need Config::Any::General for this test to make sense";
+
 my $test = {
     name => "using format",
     line => __LINE__,
