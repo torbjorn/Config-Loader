@@ -26,7 +26,6 @@ sub load_config {
                 : ""
             )
         ;
-
         $ds->{$key} = $ENV{$search} if exists $ENV{$search};
     }
 
